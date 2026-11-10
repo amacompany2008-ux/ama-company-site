@@ -150,6 +150,7 @@ section{padding-block:56px}
 .price .ask-price{font-size:17px}
 .ask{flex:none;text-align:center;font-size:14px;font-weight:700;color:#fff;background:var(--wa);text-decoration:none;padding:8px 14px;border-radius:999px}
 .ask:hover{filter:brightness(1.1)}
+.card-p.hit{outline:3px solid var(--accent);outline-offset:2px}
 /* phones: two compact cards per row; thumbnails hidden (swipe/arrows still browse photos) */
 @media (max-width:600px){
   .list{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -365,6 +366,9 @@ const P=[
  {name:"لوح بديل حجر ترافرتين",cat:"stone",price:60,specs:["٦٠ × ١٢٠ سم","مرن وبينحني","للجدران والديكور"],imgs:["p-stone5-1.jpg","p-stone5-2.jpg","p-stone5-3.jpg","p-stone5-4.jpg"]}
 ];
 const WA="https://wa.me/972567904444?text=";
+/* live site address: product links in WhatsApp messages point here (change when the domain is connected) */
+const SITE="https://ama-company-ps.pages.dev";
+const slug=p=>p.imgs[0].replace(/^p-/,"").replace(/(-\d+)?\.jpg$/,"");
 /* prices stay in the product list; set to true to show them again */
 const SHOW_PRICES=true;
 let active="all";
@@ -397,8 +401,8 @@ function card(p){
   const vars=p.variants&&p.variants.length>2?`<label class="pick"><span class="sr">اختار المقاس</span><select class="sel">${p.variants.map((v,i)=>`<option value="${i}" data-label="${v.label}" data-price="${v.price}" data-img="${v.img||""}" data-imgs="${(v.imgs||[]).join(",")}">${v.label}</option>`).join("")}</select></label>`:p.variants?`<div class="vars" role="group" aria-label="الخيار">${p.variants.map((v,i)=>`<button type="button" aria-pressed="${i===0}" data-label="${v.label}" data-price="${v.price}" data-img="${v.img||""}" data-imgs="${(v.imgs||[]).join(",")}">${v.label}</button>`).join("")}</div>`:"";
   const cols=p.colors?`<div class="vars" role="group" aria-label="اللون">${p.colors.map((v,i)=>`<button type="button" aria-pressed="${i===0}" data-label="${v.label}" data-imgs="${v.imgs.join(",")}">${v.label}</button>`).join("")}</div>`:"";
   const picks=[v0&&v0.label,c0&&c0.label].filter(Boolean).join(" - ");
-  const msg="مرحبا، بدي أطلب: "+p.name+(picks?" ("+picks+")":"");
-  return `<article class="card-p" data-name="${p.name}" style="--c:var(--${c.c})"><div class="ph"><img src="${imgs[0]}" alt="${p.name}" loading="lazy"><span class="tag">${c.name.replace("إكسسوارات ","")}</span>${thumbs}</div><div class="info"><h3>${p.name}</h3><ul class="specs">${p.specs.slice(0,2).map(s=>`<li>${s}</li>`).join("")}</ul>${vars}${cols}<div class="buy"><span class="price">${price}</span><a class="ask" target="_blank" rel="noopener" href="${WA+encodeURIComponent(msg)}">اطلب واتساب</a></div></div></article>`;
+  const msg="مرحبا، بدي أطلب: "+p.name+(picks?" ("+picks+")":"")+"\n"+SITE+"/p/"+slug(p)+"/";
+  return `<article class="card-p" id="p-${slug(p)}" data-link="${SITE}/p/${slug(p)}/" data-name="${p.name}" style="--c:var(--${c.c})"><div class="ph"><img src="${imgs[0]}" alt="${p.name}" loading="lazy"><span class="tag">${c.name.replace("إكسسوارات ","")}</span>${thumbs}</div><div class="info"><h3>${p.name}</h3><ul class="specs">${p.specs.slice(0,2).map(s=>`<li>${s}</li>`).join("")}</ul>${vars}${cols}<div class="buy"><span class="price">${price}</span><a class="ask" target="_blank" rel="noopener" href="${WA+encodeURIComponent(msg)}">اطلب واتساب</a></div></div></article>`;
 }
 function thumbsHtml(imgs){
   return imgs.length>1?`<div class="thumbs">${imgs.map((s,i)=>`<button type="button" data-src="${s}" aria-pressed="${i===0}" aria-label="صورة ${i+1}"><img src="${s}" alt=""></button>`).join("")}</div><button type="button" class="nav nav-next" aria-label="الصورة التالية">‹</button><button type="button" class="nav nav-prev" aria-label="الصورة السابقة">›</button>`:"";
@@ -433,7 +437,7 @@ function applyPick(card,b){
   if(SHOW_PRICES&&b.dataset.price)card.querySelector(".price").innerHTML=`${b.dataset.price} <small>₪</small>`;
   const sel=card.querySelector(".sel");
   const picks=[sel&&sel.selectedOptions[0].dataset.label,...[...card.querySelectorAll('.vars button[aria-pressed="true"]')].map(x=>x.dataset.label)].filter(Boolean).join(" - ");
-  card.querySelector(".ask").href=WA+encodeURIComponent("مرحبا، بدي أطلب: "+card.dataset.name+(picks?" ("+picks+")":""));
+  card.querySelector(".ask").href=WA+encodeURIComponent("مرحبا، بدي أطلب: "+card.dataset.name+(picks?" ("+picks+")":"")+"\n"+card.dataset.link);
   if(b.dataset.imgs){const set=b.dataset.imgs.split(",");const ph=card.querySelector(".ph");ph.querySelector(":scope>img").src=set[0];ph.querySelectorAll(".thumbs,.nav").forEach(x=>x.remove());ph.insertAdjacentHTML("beforeend",thumbsHtml(set));}
   else if(b.dataset.img){card.querySelector(".ph>img").src=b.dataset.img;card.querySelectorAll(".thumbs button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.src===b.dataset.img))}
 }
@@ -460,6 +464,12 @@ $("#chips").addEventListener("click",e=>{const b=e.target.closest(".chip");if(b)
 $("#catGrid").addEventListener("click",e=>{const b=e.target.closest(".cat");if(b){setCat(b.dataset.cat);$("#products").scrollIntoView({behavior:"smooth"})}});
 $("#q").addEventListener("input",render);
 render();
+/* opened from a product link (#p-name): show that product and highlight it */
+(function(){
+  const id=location.hash.slice(1);if(!id.startsWith("p-"))return;
+  const el=document.getElementById(id);if(!el)return;
+  setTimeout(()=>{el.scrollIntoView({behavior:"smooth",block:"center"});el.classList.add("hit")},300);
+})();
 
 /* cover photos: kitchen and bedroom crossfade every 6s; the buttons pick one */
 (function(){
