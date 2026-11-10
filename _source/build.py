@@ -41,3 +41,6 @@ for p in data['P']:
     os.makedirs(f'ama-company-site/p/{sl}',exist_ok=True)
     open(f'ama-company-site/p/{sl}/index.html','w',encoding='utf-8').write(page)
 print('share pages',len(data['P']))
+
+shutil.copy('ama-site.html','ama-company-site/_source/ama-site.html')
+shutil.copy('tools/build.py','ama-company-site/_source/build.py')
