@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="إكسسوارات المطابخ وغرف النوم وبديل الحجر في نابلس، مع توصيل لكل مدن الضفة والقدس والداخل.">
+<style>:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>ama.company.ps</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: wave-blues trial — lavender-white pages, deep navy header/footer, a royal-to-periwinkle band, sky/lavender highlights on the photo hero.
+   Palette from the client's wave image: deep navy, royal blue, sky blue, pale lavender, periwinkle. Single-theme (light). */
+:root{
+  --bg:#f4f5fb; --surface:#e6e9f8; --fg:#14204a; --muted:#525d86;
+  --line:#d3d8f0; --ink:#13285a; --accent:#2f66c4; --accent-soft:#dce6f8;
+  --berry:#13285a; --amber:#3b9ad6; --lilac:#5b5fc9;
+  --berry-soft:#dde2f2; --amber-soft:#dcedf9; --lilac-soft:#e2e2f8;
+  --gold:linear-gradient(180deg,#d6efff 0%,#8fc6f0 50%,#b4b3f2 100%);
+  --warm:linear-gradient(180deg,#2f66c4 0%,#13285a 100%);
+  --wa:#1f8f4e;
+  --display:"Cairo",Tahoma,"Segoe UI",sans-serif;
+  --body:"Cairo",Tahoma,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.7;direction:rtl}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:inherit}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.3}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* header */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--ink)}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--ink);color:#f5ece0;border-bottom:1px solid #3b2d20}
+.logo{height:46px;width:auto;display:block;-webkit-mask-image:radial-gradient(ellipse 62% 75% at center,#000 72%,transparent 100%);mask-image:radial-gradient(ellipse 62% 75% at center,#000 72%,transparent 100%)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:12px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand b{font-family:var(--display);font-size:18px;display:block;line-height:1.2}
+.brand small{color:#c2b19b;font-size:12px}
+nav{display:flex;gap:20px;font-size:14px}
+nav a{text-decoration:none;color:#e8dccb}
+nav a:hover{color:#fff}
+@media (max-width:720px){nav{display:none}}
+
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:15px;text-decoration:none;border:0;cursor:pointer;font-family:var(--body)}
+.btn-wa{background:var(--wa);color:#fff}
+.btn-ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.btn svg{width:18px;height:18px;fill:currentColor}
+
+/* hero */
+.hero{background:#0f0b07;color:#f5ece0;overflow:hidden}
+.stage{position:relative;isolation:isolate}
+.slides{position:absolute;inset:0;z-index:-1}
+.slide{position:absolute;inset:0;background-size:cover;background-position:28% center;opacity:0;transition:opacity 1.2s ease}
+.slide.on{opacity:1}
+.slide.k{background-image:url("hero-kitchen.jpg")}
+.slide.b{background-image:url("hero-bedroom.jpg")}
+/* darkens the empty right side of each photo, where the Arabic headline sits */
+.slides::after{content:"";position:absolute;inset:0;background:linear-gradient(to left,rgba(12,22,58,.95) 0%,rgba(12,22,58,.84) 34%,rgba(12,22,58,.28) 62%,rgba(12,22,58,0) 80%)}
+@media (max-width:820px){.slides::after{background:rgba(12,22,58,.76)}}
+.hero .grid{display:grid;grid-template-columns:1fr;padding-block:clamp(64px,10vw,120px) clamp(48px,8vw,96px)}
+.hero .grid>div{max-width:600px}
+.hero .cta{padding-bottom:0!important}
+.switch{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;display:flex;gap:8px}
+.switch button{font:inherit;font-size:13px;font-weight:600;color:#f5ece0;background:rgba(12,22,58,.6);border:1px solid rgba(226,178,79,.45);border-radius:999px;padding:6px 14px;cursor:pointer;backdrop-filter:blur(4px)}
+.switch button[aria-pressed="true"]{background:#8fc6f0;border-color:#8fc6f0;color:#13285a}
+.hero h1{max-width:18ch}
+.eyebrow{font-size:14px;letter-spacing:.04em;color:#ffd23f;font-weight:700}
+.hero h1{font-size:clamp(34px,6vw,58px);margin-block:8px 16px;font-weight:800}
+.hero h1 span{background:var(--gold);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 10px rgba(143,198,240,.25))}
+.hero p{color:#dccdb9;max-width:52ch;margin:0 0 24px}
+.hero .cta{display:flex;flex-wrap:wrap;gap:12px;padding-bottom:40px}
+.hero .btn-ghost{color:#f5ece0;border-color:rgba(191,227,250,.6)}
+/* gold band holding the three facts, full width under the hero */
+.band{background:linear-gradient(90deg,#13285a,#2f66c4 40%,#4b55c4 75%,#13285a);color:#f4f5fb}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);padding-block:24px}
+.facts div{padding-inline:24px;min-width:0}
+.facts div+div{border-inline-start:1px solid rgba(255,248,240,.35)}
+.facts div:first-child{padding-inline-start:0}
+.facts b{font-family:var(--display);font-size:24px;font-weight:800;display:block;color:#fff;line-height:1.3}
+.facts span{font-size:15px;color:#dbe3fb;font-weight:600}
+.facts .br{display:flex;align-items:center;gap:6px;font-size:16px;line-height:1.7}
+.facts .br svg{width:18px;height:18px;fill:#ffd23f;flex:none}
+.facts .br strong{color:#fff;font-weight:800}
+@media (max-width:600px){
+  .facts{grid-template-columns:1fr;padding-block:8px}
+  .facts div{padding:14px 0}
+  .facts div+div{border-inline-start:0;border-top:1px solid rgba(255,248,240,.35)}
+}
+
+/* sections */
+section{padding-block:56px}
+.head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.head h2{font-size:clamp(26px,4vw,36px)}
+.head p{margin:4px 0 0;color:var(--muted);max-width:60ch}
+
+.cats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:900px){.cats{grid-template-columns:repeat(2,1fr)}.cats .cat:last-child:nth-child(odd){grid-column:1/-1}}
+@media (max-width:600px){.cats{grid-template-columns:1fr}}
+.cats .cat{padding:28px}
+.cats .cat h3{font-size:24px}
+.cat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:8px;cursor:pointer;text-align:right;font:inherit;color:inherit;transition:border-color .15s,transform .15s}
+.cat:hover{border-color:var(--c);transform:translateY(-2px)}
+.cat .ico{width:44px;height:44px;border-radius:14px;background:var(--cs);display:grid;place-items:center}
+.cat .ico svg{width:24px;height:24px;stroke:var(--c);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cat h3{font-size:19px}
+.cat p{margin:0;font-size:14px;color:var(--muted)}
+.cat .n{font-size:13px;color:var(--c);font-weight:600;font-variant-numeric:tabular-nums}
+
+/* products */
+#products{background:var(--surface);border-block:1px solid var(--line)}
+.tools{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
+.search{flex:1 1 260px;min-width:0;padding:11px 16px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font:inherit}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--fg);font:inherit;font-size:14px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+/* product cards: light photo tile (catalogue shots are on pale grey), then name, specs, price, order button */
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px}
+@media (max-width:560px){.list{grid-template-columns:1fr}}
+.card-p{background:var(--bg);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.ph{position:relative;aspect-ratio:1/1;max-width:100%;background:#eceae7}
+.ph img{width:100%;height:100%;object-fit:contain;display:block}
+.ph{touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.ph>img{-webkit-user-drag:none;pointer-events:none}
+.nav{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.85);color:#14204a;font-size:24px;line-height:1;cursor:pointer;display:grid;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.15);opacity:.85}
+.nav:hover{opacity:1}
+.nav-next{left:8px}
+.nav-prev{right:8px}
+.tag{position:absolute;top:10px;right:10px;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--c);color:#fff}
+.thumbs{display:flex;gap:6px;position:absolute;bottom:10px;left:10px}
+.thumbs button{width:44px;height:44px;padding:0;border-radius:8px;border:2px solid transparent;background:#fff;cursor:pointer;overflow:hidden}
+.thumbs button[aria-pressed="true"]{border-color:var(--accent)}
+.thumbs img{width:100%;height:100%;object-fit:contain}
+.info{padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
+.info h3{font-size:20px}
+.specs{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 4px;padding:0;list-style:none}
+.specs li{font-size:13px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 8px;font-variant-numeric:tabular-nums}
+.vars{display:flex;flex-wrap:wrap;gap:6px}
+.vars button{font:inherit;font-size:13px;font-weight:600;color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:8px;padding:4px 12px;cursor:pointer;font-variant-numeric:tabular-nums}
+.vars button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.buy{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:10px}
+.price{font-size:26px;font-weight:800;background:var(--warm);-webkit-background-clip:text;background-clip:text;color:transparent;font-variant-numeric:tabular-nums}
+.price small{font-size:15px;font-weight:700}
+.price .ask-price{font-size:17px}
+.ask{flex:none;font-size:14px;font-weight:700;color:#fff;background:var(--wa);text-decoration:none;padding:8px 14px;border-radius:999px}
+.ask:hover{filter:brightness(1.1)}
+.empty{padding:24px 0;color:var(--muted)}
+.note{margin-top:18px;font-size:14px;color:var(--muted)}
+
+/* why */
+.why{display:grid;grid-template-columns:repeat(5,1fr);gap:24px}
+@media (max-width:980px){.why{grid-template-columns:repeat(2,1fr)}.why div:first-child{grid-column:1/-1}}
+@media (max-width:520px){.why{grid-template-columns:1fr}}
+.why .big{font-size:44px;font-weight:800;line-height:1.1;display:block;margin-bottom:6px;background:var(--warm);-webkit-background-clip:text;background-clip:text;color:transparent}
+.why div{border-top:3px solid var(--accent);padding-top:14px}
+.why div:nth-child(2){border-color:var(--lilac)}.why div:nth-child(3){border-color:var(--berry)}.why div:nth-child(4){border-color:var(--amber)}.why div:nth-child(5){border-color:var(--lilac)}
+.why h3{font-size:20px;margin-bottom:6px}
+.why p{margin:0;color:var(--muted)}
+
+/* contact */
+#contact .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:760px){#contact .grid{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px}
+.card h3{font-size:20px;margin-bottom:12px}
+.branch{display:flex;gap:12px;padding-block:12px;border-bottom:1px dashed var(--line)}
+.branch:last-child{border-bottom:0}
+.pin{flex:none;width:28px;height:28px;border-radius:50%;background:var(--berry-soft);color:var(--berry);display:grid;place-items:center;font-weight:700;font-size:13px}
+.phone{font-family:var(--display);font-size:clamp(24px,4vw,30px);direction:ltr;text-align:right;font-variant-numeric:tabular-nums;margin-block:4px 14px;user-select:all}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.copied{font-size:13px;color:var(--wa);min-height:1.2em;margin-top:8px}
+
+footer{background:var(--ink);color:#c2b19b;font-size:14px;border-top:1px solid #3b2d20}
+footer .wrap{padding-block:24px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.foot-logo{height:110px;width:auto;-webkit-mask-image:radial-gradient(ellipse 60% 66% at center,#000 70%,transparent 100%);mask-image:radial-gradient(ellipse 60% 66% at center,#000 70%,transparent 100%)}
+
+.fab{position:fixed;left:calc(16px + env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:8;width:56px;height:56px;border-radius:50%;background:var(--wa);display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.fab svg{width:28px;height:28px;fill:#fff}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <img class="logo" src="logo-mark.jpg" alt="شعار A&amp;M&amp;A" width="96" height="46">
+      <span><b><bdi>ama.company.ps</bdi></b><small>إكسسوارات المطابخ وغرف النوم · نابلس</small></span>
+    </a>
+    <nav>
+      <a href="#cats">الأقسام</a>
+      <a href="#products">المنتجات</a>
+      <a href="#contact">الفروع والتواصل</a>
+    </nav>
+    <a class="btn btn-wa" href="https://wa.me/972567904444" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.2-.8-2.7-1.1-4.4-3.9-4.5-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 .9-2.3c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .5l-.3.5-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l2 .9c.3.2.5.2.6.4.1.1.1.7-.2 1.3Z"/></svg>
+      واتساب
+    </a>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+   <div class="stage">
+    <div class="slides" aria-hidden="true"><div class="slide k on"></div><div class="slide b"></div></div>
+    <div class="wrap grid">
+      <div>
+        <div class="eyebrow">توصيل لكل مدن الضفة والقدس والداخل</div>
+        <h1>كل قطعة بتحتاجها <span>لمطبخك وغرفة نومك</span> تحت سقف واحد</h1>
+        <p>إكسسوارات مطابخ بتستغل كل زاوية، وحلول تنظيم لخزائن غرف النوم من علاقات السحب لجرارات الإكسسوارات. بنخدم الورش وأصحاب البيوت من فروعنا في نابلس: دوار زواتا وشارع المدارس.</p>
+        <div class="cta">
+          <a class="btn btn-wa" href="https://wa.me/972567904444?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D8%8C%20%D8%A8%D8%AF%D9%8A%20%D8%A7%D8%B3%D8%A3%D9%84%20%D8%B9%D9%86%20%D9%85%D9%86%D8%AA%D8%AC" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Z"/></svg>
+            اسأل عن سعر
+          </a>
+          <a class="btn btn-ghost" href="#products">تصفّح المنتجات</a>
+        </div>
+      </div>
+    </div>
+   </div>
+    <div class="band">
+      <div class="wrap facts">
+        <div><b>فروعنا</b><span class="br"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>نابلس – <strong>دوار زواتا</strong></span><span class="br"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>نابلس – <strong>شارع المدارس</strong></span></div>
+        <div><b>توصيل</b><span>لكل مدن الضفة والقدس والداخل</span></div>
+        <div><b>الأقسام</b><span id="catNames">المطابخ · غرف النوم</span></div>
+      </div>
+    </div>
+  </div>
+
+  <section id="cats">
+    <div class="wrap">
+      <div class="head">
+        <div><h2>الأقسام</h2><p>اختار القسم وبتطلعلك منتجاته تحت.</p></div>
+      </div>
+      <div class="cats" id="catGrid"></div>
+    </div>
+  </section>
+
+  <section id="products">
+    <div class="wrap">
+      <div class="head">
+        <div><h2>المنتجات</h2><p>اختار القطعة واضغط «اطلب واتساب»، وبتوصلنا رسالة فيها اسم المنتج وبنرد عليك بالتفاصيل والتوصيل.</p></div>
+      </div>
+      <div class="tools">
+        <input id="q" class="search" type="search" placeholder="ابحث: سلة، علاقة، جرار…" aria-label="ابحث عن منتج">
+        <div class="chips" id="chips"></div>
+      </div>
+      <div class="list" id="list"></div>
+      <p class="note">مش لاقي القطعة؟ ابعتلنا صورتها على الواتساب وبندبّرلك ياها.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="head"><div><h2>ليش تتعامل معنا</h2></div></div>
+      <div class="why">
+        <div><span class="big">+٢٥</span><h3>سنة خبرة</h3><p>أكثر من ٢٥ سنة بإكسسوارات المطابخ وغرف النوم.</p></div>
+        <div><h3>من أول نظرة</h3><p>بنعرف شو القطعة اللي بتركب على مطبخك من أول نظرة.</p></div>
+        <div><h3>أسعار منافسة</h3><p>أسعار مناسبة للورشة وللبيت، وبجودة ما بتتنازل عنها.</p></div>
+        <div><h3>جودة مضمونة</h3><p>قطع أصلية من ماركات معروفة زي ZOVAXA، مجرّبة لسنين.</p></div>
+        <div><h3>تشكيلة كبيرة</h3><p>مئات القطع للمطابخ وغرف النوم بمكان واحد.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <div class="head"><div><h2>الفروع والتواصل</h2></div></div>
+      <div class="grid">
+        <div class="card">
+          <h3>فروعنا في نابلس</h3>
+          <div class="branch"><span class="pin">١</span><div><b>فرع دوار زواتا</b><br><small>نابلس</small></div></div>
+          <div class="branch"><span class="pin">٢</span><div><b>فرع شارع المدارس</b><br><small>نابلس</small></div></div>
+        </div>
+        <div class="card">
+          <h3>واتساب وطلبات</h3>
+          <div class="phone" id="phone">+972 56 790 4444</div>
+          <div class="row">
+            <a class="btn btn-wa" href="https://wa.me/972567904444" target="_blank" rel="noopener">افتح المحادثة</a>
+            <button class="btn btn-ghost" id="copy" type="button">انسخ الرقم</button>
+          </div>
+          <div class="copied" id="copied" aria-live="polite"></div>
+          <p class="note">تابعنا على الإنستغرام: <a href="https://www.instagram.com/ama.company.ps" target="_blank" rel="noopener">@ama.company.ps</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <img class="foot-logo" src="logo-mark.jpg" alt="شعار A&amp;M&amp;A" width="145" height="70" style="height:70px">
+    <span>© <bdi>ama.company.ps</bdi></span>
+    <span>نابلس، فلسطين</span>
+  </div>
+</footer>
+
+<a class="fab" href="https://wa.me/972567904444" target="_blank" rel="noopener" aria-label="راسلنا على واتساب">
+  <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.2-.8-2.7-1.1-4.4-3.9-4.5-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 .9-2.3c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .5l-.3.5-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l2 .9c.3.2.5.2.6.4.1.1.1.7-.2 1.3Z"/></svg>
+</a>
+
+<script>
+const CATS=[
+ {id:"kitchen",c:"accent",name:"إكسسوارات المطابخ",desc:"سلال المونة، حلول الزوايا، سلال الزبالة المخفية، ومنظمات الجوارير",icon:'<path d="M4 10h16v10H4z"/><path d="M4 10l2-5h12l2 5"/><path d="M10 14h4"/>'},
+ {id:"closet",c:"lilac",name:"إكسسوارات غرف النوم",desc:"علاقات سحب، رفوف أحذية، جرارات إكسسوارات، وطاولة كوي مخفية",icon:'<path d="M6 3h12v18H6z"/><path d="M12 3v18"/><path d="M10 11v2M14 11v2"/>'},
+ {id:"stone",c:"amber",name:"بديل حجر",desc:"ألواح بديل حجر للجدران والديكور الداخلي والخارجي",icon:'<path d="M3 5h8v5H3zM13 5h8v5h-8zM3 14h5v5H3zM10 14h11v5H10z"/>'}
+];
+/* products: add one object per item; imgs are files published next to the page */
+const P=[
+ {name:"علاقة بناطيل هايدروليك",cat:"closet",price:150,specs:["سحب","٢٠ بنطلون","٦٥ × ٤٦ سم"],imgs:["p-pants-1.jpg","p-pants-2.jpg"]},
+ {name:"طاولة كوي سحب مخفية داخل الخزانة",cat:"closet",price:200,specs:["بتنطوي وبتختفي","مطوية ٤٥ × ٣٠ سم","مفتوحة ٨٠ سم"],imgs:["p-iron-1.jpg","p-iron-2.jpg","p-iron-3.jpg"]},
+ {name:"منظم إكسسوار فاخر شامواه وجلد",cat:"closet",price:250,specs:["عرض قابل للتمديد ٥٠–٨٠ سم","عمق ٤٠ سم","للساعات والخواتم والأساور"],imgs:["p-jewel-1.jpg","p-jewel-2.jpg","p-jewel-3.jpg","p-jewel-4.jpg"]},
+ {name:"جرار إكسسوار لون جرافيت",cat:"closet",price:250,specs:["مع سكك سحب","٥٦ × ٤٥ سم","٩ خانات منها علبة بغطا وخانة خواتم"],imgs:["p-graph-1.jpg","p-graph-2.jpg","p-graph-3.jpg"]},
+ {name:"خزنة فاخرة بالبصمة والرقم السري",cat:"closet",price:480,specs:["بصمة + رقم سري + مفتاح","٥٦ × ٤٠ سم","تبطين مخمل أحمر"],imgs:["p-safe-1.jpg","p-safe-2.jpg","p-safe-3.jpg"]},
+ {name:"علاقة ملابس سحب هايدروليك",cat:"closet",specs:["بتنزل لعندك وبترجع لحالها","ارتفاع ٨٣ سم"],imgs:["p-lift-1.jpg","p-lift-life.jpg","p-lift-2.jpg","p-lift-3.jpg"],
+  variants:[{label:"عرض ٦٣ سم",price:110,img:"p-lift-2.jpg"},{label:"عرض ١١٥ سم",price:120,img:"p-lift-3.jpg"}]},
+ {name:"علاقة جرافة هايدروليك",cat:"closet",specs:["سحب","طول ٤٧ سم","عرض ١٦ سم"],imgs:["p-tie-1.jpg","p-tie-2.jpg","p-tie-3.jpg"],
+  variants:[{label:"تركيب يمين",price:120},{label:"تركيب شمال",price:120}]},
+ {name:"سلة ملابس سحب هايدروليك",cat:"closet",specs:["سحب","سلتين قماش بتنشالوا","عمق ٤٥ سم"],imgs:["p-laundry-1.jpg","p-laundry-2.jpg","p-laundry-3.jpg"],
+  variants:[{label:"عرض ٧٠ سم",price:250,img:"p-laundry-2.jpg"},{label:"عرض ٨٠ سم",price:250,img:"p-laundry-3.jpg"}]},
+ {name:"سطل مهملات سحب",cat:"kitchen",specs:["سطلين","٣٥ × ٥٠ سم","ارتفاع ٤٤ سم"],imgs:["p-bin-g1.jpg"],
+  variants:[{label:"جرافيت",price:200,imgs:["p-bin-g1.jpg","p-bin-g2.jpg","p-bin-g3.jpg"]},{label:"أبيض",price:200,imgs:["p-bin-w1.jpg","p-bin-w2.jpg","p-bin-w3.jpg"]}]},
+ {name:"قاعدة غاز سحب هايدروليك",cat:"kitchen",price:100,specs:["سحب","٣٥ × ٤٥ سم","حلقة تثبيت للجرة"],imgs:["p-gas-1.jpg","p-gas-2.jpg","p-gas-3.jpg"]},
+ {name:"سوبر مجك كورنر زجاج",cat:"kitchen",price:500,specs:["٤ رفوف زجاج","للزوايا","٧٠ × ٤٥ سم"],imgs:["p-corner-1.jpg","p-corner-2.jpg","p-corner-3.jpg"]},
+ {name:"سوبر مجك كورنر ستانلس",cat:"kitchen",price:350,specs:["٤ سلال ستانلس","للزوايا","٧٠ × ٤٥ سم"],imgs:["p-cornerss-1.jpg","p-cornerss-2.jpg","p-cornerss-3.jpg"]},
+ {name:"سلة ستانلس هايدروليك",cat:"kitchen",specs:["سحب","العمق ثابت لكل المقاسات"],imgs:["p-basket-1.jpg","p-basket-2.jpg","p-basket-3.jpg"],
+  variants:[30,35,40,45,50,55,60].map((w,i)=>({label:"عرض "+w.toLocaleString("ar-EG")+" سم",price:65+i*5}))},
+ {name:"منظم جرار الشوك والمعالق",cat:"kitchen",specs:["١٠ خانات","عمق ٤٨ سم"],imgs:["p-tray-g1.jpg"],
+  variants:[{label:"عرض ٦٣ سم",price:35},{label:"عرض ٧٣ سم",price:40},{label:"عرض ٨٣ سم",price:45}],
+  colors:[{label:"سكني",imgs:["p-tray-g1.jpg","p-tray-life.jpg","p-tray-dim.jpg"]},{label:"أبيض",imgs:["p-tray-w1.jpg","p-tray-dim.jpg"]}]},
+ {name:"سلة بهار وقناني سحب",cat:"kitchen",specs:["رفين","عمق ٤٨ سم","ارتفاع ٥٢ سم"],imgs:["p-spicess-1.jpg","p-spicess-2.jpg","p-spicess-3.jpg"],
+  variants:[15,20,25,30,35,40].map((w,i)=>({label:"عرض "+w.toLocaleString("ar-EG")+" سم",price:125+i*10}))},
+ {name:"سلة مونة فاخر زجاج هايدروليك",cat:"kitchen",specs:["رفوف بحماية زجاج","فواصل متحركة","عمق ٤٥ سم","ارتفاع ٤٥ سم"],imgs:["p-pantry-1.jpg","p-pantry-2.jpg","p-pantry-3.jpg"],
+  variants:[15,20,25,30,35,40].map((w,i)=>({label:"عرض "+w.toLocaleString("ar-EG")+" سم",price:150+i*10}))},
+ {name:"لوح بديل حجر",cat:"stone",price:60,specs:["٦٠ × ١٥٠ سم","مرن وبينحني","للجدران والديكور"],imgs:["p-stone1-1.jpg","p-stone1-2.jpg","p-stone1-3.jpg","p-stone1-4.jpg"]},
+ {name:"لوح بديل حجر رمادي",cat:"stone",price:60,specs:["٦٠ × ١٢٠ سم","مرن وبينحني","للجدران والديكور"],imgs:["p-stone2-1.jpg","p-stone2-2.jpg","p-stone2-3.jpg","p-stone2-4.jpg"]},
+ {name:"لوح بديل حجر أبيض",cat:"stone",price:60,specs:["٦٠ × ١٢٠ سم","مرن وبينحني","للجدران والديكور"],imgs:["p-stone3-1.jpg","p-stone3-2.jpg","p-stone3-3.jpg","p-stone3-4.jpg"]},
+ {name:"لوح بديل حجر ترافرتين بيج",cat:"stone",price:60,specs:["٦٠ × ١٢٠ سم","مرن وبينحني","للجدران والديكور"],imgs:["p-stone4-1.jpg","p-stone4-2.jpg","p-stone4-3.jpg","p-stone4-4.jpg"]},
+ {name:"لوح بديل حجر ترافرتين",cat:"stone",price:60,specs:["٦٠ × ١٢٠ سم","مرن وبينحني","للجدران والديكور"],imgs:["p-stone5-1.jpg","p-stone5-2.jpg","p-stone5-3.jpg","p-stone5-4.jpg"]}
+];
+const WA="https://wa.me/972567904444?text=";
+/* prices stay in the product list; set to true to show them again */
+const SHOW_PRICES=true;
+let active="all";
+const $=s=>document.querySelector(s);
+
+$("#catGrid").innerHTML=CATS.map(c=>{
+  const n=P.filter(p=>p.cat===c.id).length;
+  return `<button class="cat" type="button" data-cat="${c.id}" style="--c:var(--${c.c});--cs:var(--${c.c}-soft)"><span class="ico"><svg viewBox="0 0 24 24">${c.icon}</svg></span><h3>${c.name}</h3><p>${c.desc}</p><span class="n">${n?n+" منتج":"المنتجات قريباً"}</span></button>`}).join("");
+
+/* band lists every category, so new sections show up here automatically */
+$("#catNames").textContent=CATS.map(c=>c.name.replace("إكسسوارات ","")).join(" · ");
+
+$("#chips").innerHTML=[{id:"all",name:"الكل"},...CATS].map(c=>`<button class="chip" type="button" data-f="${c.id}" aria-pressed="${c.id==="all"}">${c.name}</button>`).join("");
+
+function render(){
+  document.querySelector(".tools").hidden=!P.length;
+  if(!P.length){$("#list").innerHTML=`<p class="empty">بنضيف المنتجات بالصور والأسعار قريباً. لحد ذلك، اسألنا عن أي قطعة على الواتساب.</p>`;return}
+  const q=$("#q").value.trim();
+  const rows=P.filter(p=>(active==="all"||p.cat===active)&&(!q||p.name.includes(q)||p.specs.join(" ").includes(q)));
+  $("#list").innerHTML=rows.length?rows.map(card).join(""):`<p class="empty">ما لقينا «${q.replace(/[<>&]/g,"")}» بالقائمة. ابعتلنا صورة القطعة على الواتساب.</p>`;
+}
+function card(p){
+  const c=CATS.find(x=>x.id===p.cat);
+  const v0=p.variants?p.variants[0]:null;
+  const c0=p.colors?p.colors[0]:null;
+  const imgs=(c0&&c0.imgs)||(v0&&v0.imgs)||p.imgs;
+  const thumbs=thumbsHtml(imgs);
+  const amount=v0?v0.price:p.price;
+  const price=!SHOW_PRICES?`<span class="ask-price">اسأل عن السعر</span>`:(typeof amount==="number"?`${amount} <small>₪</small>`:amount);
+  const vars=p.variants?`<div class="vars" role="group" aria-label="الخيار">${p.variants.map((v,i)=>`<button type="button" aria-pressed="${i===0}" data-label="${v.label}" data-price="${v.price}" data-img="${v.img||""}" data-imgs="${(v.imgs||[]).join(",")}">${v.label}</button>`).join("")}</div>`:"";
+  const cols=p.colors?`<div class="vars" role="group" aria-label="اللون">${p.colors.map((v,i)=>`<button type="button" aria-pressed="${i===0}" data-label="${v.label}" data-imgs="${v.imgs.join(",")}">${v.label}</button>`).join("")}</div>`:"";
+  const picks=[v0&&v0.label,c0&&c0.label].filter(Boolean).join(" - ");
+  const msg="مرحبا، بدي أطلب: "+p.name+(picks?" ("+picks+")":"");
+  return `<article class="card-p" data-name="${p.name}" style="--c:var(--${c.c})"><div class="ph"><img src="${imgs[0]}" alt="${p.name}" loading="lazy"><span class="tag">${c.name.replace("إكسسوارات ","")}</span>${thumbs}</div><div class="info"><h3>${p.name}</h3><ul class="specs">${p.specs.map(s=>`<li>${s}</li>`).join("")}</ul>${vars}${cols}<div class="buy"><span class="price">${price}</span><a class="ask" target="_blank" rel="noopener" href="${WA+encodeURIComponent(msg)}">اطلب واتساب</a></div></div></article>`;
+}
+function thumbsHtml(imgs){
+  return imgs.length>1?`<div class="thumbs">${imgs.map((s,i)=>`<button type="button" data-src="${s}" aria-pressed="${i===0}" aria-label="صورة ${i+1}"><img src="${s}" alt=""></button>`).join("")}</div><button type="button" class="nav nav-next" aria-label="الصورة التالية">‹</button><button type="button" class="nav nav-prev" aria-label="الصورة السابقة">›</button>`:"";
+}
+/* gallery: arrows, swipe on phones and drag with the mouse step through a product's photos */
+function step(ph,dir){
+  const btns=[...ph.querySelectorAll(".thumbs button")];if(btns.length<2)return;
+  let i=btns.findIndex(b=>b.getAttribute("aria-pressed")==="true");
+  i=(i+dir+btns.length)%btns.length;
+  ph.querySelector(":scope>img").src=btns[i].dataset.src;
+  btns.forEach((b,j)=>b.setAttribute("aria-pressed",j===i));
+}
+$("#list").addEventListener("click",e=>{
+  const n=e.target.closest(".nav");if(!n)return;
+  step(n.closest(".ph"),n.classList.contains("nav-next")?1:-1);
+});
+let swipe=null;
+$("#list").addEventListener("pointerdown",e=>{
+  const ph=e.target.closest(".ph");
+  if(!ph||e.target.closest("button"))return;
+  swipe={ph,x:e.clientX,y:e.clientY};
+});
+addEventListener("pointerup",e=>{
+  if(!swipe)return;
+  const dx=e.clientX-swipe.x,dy=e.clientY-swipe.y;
+  if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy))step(swipe.ph,dx<0?1:-1);
+  swipe=null;
+});
+addEventListener("pointercancel",()=>{swipe=null});
+/* option picker (size, side, colour): swaps price, photos and the WhatsApp message */
+$("#list").addEventListener("click",e=>{
+  const b=e.target.closest(".vars button");if(!b)return;
+  const card=b.closest(".card-p");
+  b.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));
+  if(SHOW_PRICES&&b.dataset.price)card.querySelector(".price").innerHTML=`${b.dataset.price} <small>₪</small>`;
+  const picks=[...card.querySelectorAll('.vars button[aria-pressed="true"]')].map(x=>x.dataset.label).join(" - ");
+  card.querySelector(".ask").href=WA+encodeURIComponent("مرحبا، بدي أطلب: "+card.dataset.name+(picks?" ("+picks+")":""));
+  if(b.dataset.imgs){const set=b.dataset.imgs.split(",");const ph=card.querySelector(".ph");ph.querySelector(":scope>img").src=set[0];ph.querySelectorAll(".thumbs,.nav").forEach(x=>x.remove());ph.insertAdjacentHTML("beforeend",thumbsHtml(set));}
+  else if(b.dataset.img){card.querySelector(".ph>img").src=b.dataset.img;card.querySelectorAll(".thumbs button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.src===b.dataset.img))}
+});
+$("#list").addEventListener("click",e=>{
+  const b=e.target.closest(".thumbs button");if(!b)return;
+  const ph=b.closest(".ph");ph.querySelector(":scope>img").src=b.dataset.src;
+  ph.querySelectorAll(".thumbs button").forEach(x=>x.setAttribute("aria-pressed",x===b));
+});
+function setCat(id){
+  active=id;
+  document.querySelectorAll(".chip").forEach(b=>b.setAttribute("aria-pressed",b.dataset.f===id));
+  render();
+}
+$("#chips").addEventListener("click",e=>{const b=e.target.closest(".chip");if(b)setCat(b.dataset.f)});
+$("#catGrid").addEventListener("click",e=>{const b=e.target.closest(".cat");if(b){setCat(b.dataset.cat);$("#products").scrollIntoView({behavior:"smooth"})}});
+$("#q").addEventListener("input",render);
+render();
+
+/* cover photos: kitchen and bedroom crossfade every 6s; the buttons pick one */
+(function(){
+  const s=document.querySelectorAll(".slide");let i=0,t;
+  const show=n=>{i=n;s.forEach((el,j)=>el.classList.toggle("on",j===n))};
+  const auto=()=>{clearInterval(t);if(!matchMedia("(prefers-reduced-motion: reduce)").matches)t=setInterval(()=>show(1-i),6000)};
+  auto();
+})();
+
+$("#copy").addEventListener("click",()=>{
+  const t="+972567904444";
+  navigator.clipboard.writeText(t).then(()=>{$("#copied").textContent="تم نسخ الرقم"}).catch(()=>{
+    const r=document.createRange();r.selectNodeContents($("#phone"));const s=getSelection();s.removeAllRanges();s.addRange(r);
+    $("#copied").textContent="الرقم محدد، انسخه من جهازك";
+  });
+});
+
+</script>
+
+</body>
+</html>
