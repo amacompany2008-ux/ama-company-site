@@ -118,7 +118,7 @@ section{padding-block:56px}
 .chip{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--fg);font:inherit;font-size:14px;cursor:pointer}
 .chip[aria-pressed="true"]{background:var(--accent);color:var(--bg);border-color:var(--accent)}
 /* product cards: light photo tile (catalogue shots are on pale grey), then name, specs, price, order button */
-.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px}
 .card-p{background:var(--bg);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
 .ph{position:relative;aspect-ratio:1/1;max-width:100%;background:#eceae7}
 .ph img{width:100%;height:100%;object-fit:contain;display:block}
@@ -129,10 +129,14 @@ section{padding-block:56px}
 .nav-next{left:8px}
 .nav-prev{right:8px}
 .tag{position:absolute;top:10px;right:10px;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--c);color:#fff}
-.thumbs{display:flex;gap:6px;position:absolute;bottom:10px;left:10px}
-.thumbs button{width:44px;height:44px;padding:0;border-radius:8px;border:2px solid transparent;background:#fff;cursor:pointer;overflow:hidden}
-.thumbs button[aria-pressed="true"]{border-color:var(--accent)}
-.thumbs img{width:100%;height:100%;object-fit:contain}
+/* photo position dots */
+.thumbs{display:flex;gap:6px;position:absolute;bottom:8px;left:50%;transform:translateX(-50%)}
+.thumbs button{width:8px;height:8px;padding:0;border-radius:50%;border:0;background:rgba(20,32,74,.25);cursor:pointer}
+.thumbs button[aria-pressed="true"]{background:var(--accent);width:18px;border-radius:4px}
+.thumbs img{display:none}
+.pick{display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.sel{width:100%;font:inherit;font-size:14px;font-weight:600;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer}
 .info{padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
 .info h3{font-size:20px}
 .specs{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 4px;padding:0;list-style:none}
@@ -140,17 +144,16 @@ section{padding-block:56px}
 .vars{display:flex;flex-wrap:wrap;gap:6px}
 .vars button{font:inherit;font-size:13px;font-weight:600;color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:8px;padding:4px 12px;cursor:pointer;font-variant-numeric:tabular-nums}
 .vars button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
-.buy{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:10px}
+.buy{display:flex;flex-direction:column;align-items:stretch;gap:8px;margin-top:auto;padding-top:10px}
 .price{font-size:26px;font-weight:800;background:var(--warm);-webkit-background-clip:text;background-clip:text;color:transparent;font-variant-numeric:tabular-nums}
 .price small{font-size:15px;font-weight:700}
 .price .ask-price{font-size:17px}
-.ask{flex:none;font-size:14px;font-weight:700;color:#fff;background:var(--wa);text-decoration:none;padding:8px 14px;border-radius:999px}
+.ask{flex:none;text-align:center;font-size:14px;font-weight:700;color:#fff;background:var(--wa);text-decoration:none;padding:8px 14px;border-radius:999px}
 .ask:hover{filter:brightness(1.1)}
 /* phones: two compact cards per row; thumbnails hidden (swipe/arrows still browse photos) */
 @media (max-width:600px){
   .list{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
   .card-p{border-radius:12px}
-  .thumbs{display:none}
   .nav{width:26px;height:26px;font-size:18px}
   .nav-next{left:4px}.nav-prev{right:4px}
   .tag{top:6px;right:6px;font-size:10px;padding:2px 7px}
@@ -158,7 +161,7 @@ section{padding-block:56px}
   .info h3{font-size:14px;line-height:1.4}
   .specs{gap:4px;margin:0}
   .specs li{font-size:11px;padding:0 5px}
-  .specs li:nth-child(n+3){display:none}
+  .sel{font-size:12px;padding:4px 6px}
   .vars{gap:4px}
   .vars button{font-size:11px;padding:2px 7px}
   .buy{flex-direction:column;align-items:stretch;gap:6px;padding-top:6px}
@@ -391,11 +394,11 @@ function card(p){
   const thumbs=thumbsHtml(imgs);
   const amount=v0?v0.price:p.price;
   const price=!SHOW_PRICES?`<span class="ask-price">اسأل عن السعر</span>`:(typeof amount==="number"?`${amount} <small>₪</small>`:amount);
-  const vars=p.variants?`<div class="vars" role="group" aria-label="الخيار">${p.variants.map((v,i)=>`<button type="button" aria-pressed="${i===0}" data-label="${v.label}" data-price="${v.price}" data-img="${v.img||""}" data-imgs="${(v.imgs||[]).join(",")}">${v.label}</button>`).join("")}</div>`:"";
+  const vars=p.variants&&p.variants.length>2?`<label class="pick"><span class="sr">اختار المقاس</span><select class="sel">${p.variants.map((v,i)=>`<option value="${i}" data-label="${v.label}" data-price="${v.price}" data-img="${v.img||""}" data-imgs="${(v.imgs||[]).join(",")}">${v.label}</option>`).join("")}</select></label>`:p.variants?`<div class="vars" role="group" aria-label="الخيار">${p.variants.map((v,i)=>`<button type="button" aria-pressed="${i===0}" data-label="${v.label}" data-price="${v.price}" data-img="${v.img||""}" data-imgs="${(v.imgs||[]).join(",")}">${v.label}</button>`).join("")}</div>`:"";
   const cols=p.colors?`<div class="vars" role="group" aria-label="اللون">${p.colors.map((v,i)=>`<button type="button" aria-pressed="${i===0}" data-label="${v.label}" data-imgs="${v.imgs.join(",")}">${v.label}</button>`).join("")}</div>`:"";
   const picks=[v0&&v0.label,c0&&c0.label].filter(Boolean).join(" - ");
   const msg="مرحبا، بدي أطلب: "+p.name+(picks?" ("+picks+")":"");
-  return `<article class="card-p" data-name="${p.name}" style="--c:var(--${c.c})"><div class="ph"><img src="${imgs[0]}" alt="${p.name}" loading="lazy"><span class="tag">${c.name.replace("إكسسوارات ","")}</span>${thumbs}</div><div class="info"><h3>${p.name}</h3><ul class="specs">${p.specs.map(s=>`<li>${s}</li>`).join("")}</ul>${vars}${cols}<div class="buy"><span class="price">${price}</span><a class="ask" target="_blank" rel="noopener" href="${WA+encodeURIComponent(msg)}">اطلب واتساب</a></div></div></article>`;
+  return `<article class="card-p" data-name="${p.name}" style="--c:var(--${c.c})"><div class="ph"><img src="${imgs[0]}" alt="${p.name}" loading="lazy"><span class="tag">${c.name.replace("إكسسوارات ","")}</span>${thumbs}</div><div class="info"><h3>${p.name}</h3><ul class="specs">${p.specs.slice(0,2).map(s=>`<li>${s}</li>`).join("")}</ul>${vars}${cols}<div class="buy"><span class="price">${price}</span><a class="ask" target="_blank" rel="noopener" href="${WA+encodeURIComponent(msg)}">اطلب واتساب</a></div></div></article>`;
 }
 function thumbsHtml(imgs){
   return imgs.length>1?`<div class="thumbs">${imgs.map((s,i)=>`<button type="button" data-src="${s}" aria-pressed="${i===0}" aria-label="صورة ${i+1}"><img src="${s}" alt=""></button>`).join("")}</div><button type="button" class="nav nav-next" aria-label="الصورة التالية">‹</button><button type="button" class="nav nav-prev" aria-label="الصورة السابقة">›</button>`:"";
@@ -426,15 +429,22 @@ addEventListener("pointerup",e=>{
 });
 addEventListener("pointercancel",()=>{swipe=null});
 /* option picker (size, side, colour): swaps price, photos and the WhatsApp message */
-$("#list").addEventListener("click",e=>{
-  const b=e.target.closest(".vars button");if(!b)return;
-  const card=b.closest(".card-p");
-  b.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));
+function applyPick(card,b){
   if(SHOW_PRICES&&b.dataset.price)card.querySelector(".price").innerHTML=`${b.dataset.price} <small>₪</small>`;
-  const picks=[...card.querySelectorAll('.vars button[aria-pressed="true"]')].map(x=>x.dataset.label).join(" - ");
+  const sel=card.querySelector(".sel");
+  const picks=[sel&&sel.selectedOptions[0].dataset.label,...[...card.querySelectorAll('.vars button[aria-pressed="true"]')].map(x=>x.dataset.label)].filter(Boolean).join(" - ");
   card.querySelector(".ask").href=WA+encodeURIComponent("مرحبا، بدي أطلب: "+card.dataset.name+(picks?" ("+picks+")":""));
   if(b.dataset.imgs){const set=b.dataset.imgs.split(",");const ph=card.querySelector(".ph");ph.querySelector(":scope>img").src=set[0];ph.querySelectorAll(".thumbs,.nav").forEach(x=>x.remove());ph.insertAdjacentHTML("beforeend",thumbsHtml(set));}
   else if(b.dataset.img){card.querySelector(".ph>img").src=b.dataset.img;card.querySelectorAll(".thumbs button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.src===b.dataset.img))}
+}
+$("#list").addEventListener("click",e=>{
+  const b=e.target.closest(".vars button");if(!b)return;
+  b.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));
+  applyPick(b.closest(".card-p"),b);
+});
+$("#list").addEventListener("change",e=>{
+  const s=e.target.closest(".sel");if(!s)return;
+  applyPick(s.closest(".card-p"),s.selectedOptions[0]);
 });
 $("#list").addEventListener("click",e=>{
   const b=e.target.closest(".thumbs button");if(!b)return;
