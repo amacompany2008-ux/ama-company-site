@@ -143,7 +143,36 @@ section{padding-block:56px}
 .price .ask-price{font-size:17px}
 .ask{flex:none;text-align:center;font-size:14px;font-weight:700;color:#fff;background:var(--wa);text-decoration:none;padding:8px 14px;border-radius:999px}
 .ask:hover{filter:brightness(1.1)}
-.card-p.hit{outline:3px solid var(--accent);outline-offset:2px}
+.list .card-p .ph,.list .card-p h3{cursor:pointer}
+/* full-screen product view */
+body.pd-open{overflow:hidden}
+.pd{position:fixed;inset:0;z-index:40;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:env(safe-area-inset-bottom,0px)}
+.pd-bar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:12px;background:var(--ink);color:#fff;padding-block:calc(10px + env(safe-area-inset-top,0px)) 10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.pd-bar b{font-size:17px}
+.pd-x{width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.15);display:grid;place-items:center;cursor:pointer}
+.pd-x svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.pd-body{padding-block:20px 48px}
+.pd-main .card-p{display:grid;grid-template-columns:1.1fr 1fr;border-radius:18px}
+.pd-main .ph{aspect-ratio:1/1}
+.pd-main .info{padding:28px;gap:12px;justify-content:center}
+.pd-main .info h3{font-size:30px;line-height:1.35}
+.pd-main .specs li{font-size:15px;padding:3px 10px}
+.pd-main .vars button,.pd-main .sel{font-size:15px;padding:8px 14px}
+.pd-main .price{font-size:34px}
+.pd-main .price .ask-price{font-size:22px}
+.pd-main .ask{font-size:17px;padding:13px 18px}
+.pd-main .buy{margin-top:8px}
+.pd-main .nav{width:44px;height:44px;font-size:28px}
+.pd-main .thumbs button{width:10px;height:10px}
+.pd-main .thumbs button[aria-pressed="true"]{width:24px}
+.pd-more h2{font-size:clamp(20px,3vw,26px);margin:36px 0 16px}
+@media (max-width:760px){
+  .pd-main .card-p{grid-template-columns:1fr}
+  .pd-main .info{padding:16px 16px 20px}
+  .pd-main .info h3{font-size:22px}
+  .pd-main .specs li{font-size:13px}
+  .pd-main .price{font-size:26px}
+}
 /* phones: two compact cards per row; thumbnails hidden (swipe/arrows still browse photos) */
 @media (max-width:600px){
   .list{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -304,6 +333,11 @@ footer .wrap{padding-block:24px;display:flex;justify-content:space-between;align
   </section>
 </main>
 
+<div id="pd" class="pd" hidden role="dialog" aria-modal="true" aria-labelledby="pdTitle">
+  <div class="pd-bar"><button type="button" id="pdClose" class="pd-x" aria-label="رجوع"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button><b id="pdTitle"></b></div>
+  <div class="wrap pd-body"><div id="pdMain" class="pd-main"></div><div id="pdMore" class="pd-more"></div></div>
+</div>
+
 <footer>
   <div class="wrap">
     <img class="foot-logo" src="logo-mark.jpg" alt="شعار A&amp;M&amp;A" width="145" height="70" style="height:70px">
@@ -380,7 +414,7 @@ function render(){
   const rows=P.filter(p=>(active==="all"||p.cat===active)&&(!q||p.name.includes(q)||p.specs.join(" ").includes(q)));
   $("#list").innerHTML=rows.length?rows.map(card).join(""):`<p class="empty">ما لقينا «${q.replace(/[<>&]/g,"")}» بالقائمة. ابعتلنا صورة القطعة على الواتساب.</p>`;
 }
-function card(p){
+function card(p,full){
   const c=CATS.find(x=>x.id===p.cat);
   const v0=p.variants?p.variants[0]:null;
   const c0=p.colors?p.colors[0]:null;
@@ -392,7 +426,7 @@ function card(p){
   const cols=p.colors?`<div class="vars" role="group" aria-label="اللون">${p.colors.map((v,i)=>`<button type="button" aria-pressed="${i===0}" data-label="${v.label}" data-imgs="${v.imgs.join(",")}">${v.label}</button>`).join("")}</div>`:"";
   const picks=[v0&&v0.label,c0&&c0.label].filter(Boolean).join(" - ");
   const msg="مرحبا، بدي أطلب: "+p.name+(picks?" ("+picks+")":"")+"\n"+SITE+"/p/"+slug(p)+"/";
-  return `<article class="card-p" id="p-${slug(p)}" data-link="${SITE}/p/${slug(p)}/" data-name="${p.name}" style="--c:var(--${c.c})"><div class="ph"><img src="${imgs[0]}" alt="${p.name}" loading="lazy"><span class="tag">${c.name.replace("إكسسوارات ","")}</span>${thumbs}</div><div class="info"><h3>${p.name}</h3><ul class="specs">${p.specs.slice(0,2).map(s=>`<li>${s}</li>`).join("")}</ul>${vars}${cols}<div class="buy"><span class="price">${price}</span><a class="ask" target="_blank" rel="noopener" href="${WA+encodeURIComponent(msg)}">اطلب واتساب</a></div></div></article>`;
+  return `<article class="card-p" id="p-${slug(p)}" data-link="${SITE}/p/${slug(p)}/" data-name="${p.name}" style="--c:var(--${c.c})"><div class="ph"><img src="${imgs[0]}" alt="${p.name}" loading="lazy"><span class="tag">${c.name.replace("إكسسوارات ","")}</span>${thumbs}</div><div class="info"><h3>${p.name}</h3><ul class="specs">${(full?p.specs:p.specs.slice(0,2)).map(s=>`<li>${s}</li>`).join("")}</ul>${vars}${cols}<div class="buy"><span class="price">${price}</span><a class="ask" target="_blank" rel="noopener" href="${WA+encodeURIComponent(msg)}">اطلب واتساب</a></div></div></article>`;
 }
 function thumbsHtml(imgs){
   return imgs.length>1?`<div class="thumbs">${imgs.map((s,i)=>`<button type="button" data-src="${s}" aria-pressed="${i===0}" aria-label="صورة ${i+1}"><img src="${s}" alt=""></button>`).join("")}</div><button type="button" class="nav nav-next" aria-label="الصورة التالية">‹</button><button type="button" class="nav nav-prev" aria-label="الصورة السابقة">›</button>`:"";
@@ -405,12 +439,12 @@ function step(ph,dir){
   ph.querySelector(":scope>img").src=btns[i].dataset.src;
   btns.forEach((b,j)=>b.setAttribute("aria-pressed",j===i));
 }
-$("#list").addEventListener("click",e=>{
+document.addEventListener("click",e=>{
   const n=e.target.closest(".nav");if(!n)return;
   step(n.closest(".ph"),n.classList.contains("nav-next")?1:-1);
 });
-let swipe=null;
-$("#list").addEventListener("pointerdown",e=>{
+let swipe=null,swiped=0;
+document.addEventListener("pointerdown",e=>{
   const ph=e.target.closest(".ph");
   if(!ph||e.target.closest("button"))return;
   swipe={ph,x:e.clientX,y:e.clientY};
@@ -418,7 +452,7 @@ $("#list").addEventListener("pointerdown",e=>{
 addEventListener("pointerup",e=>{
   if(!swipe)return;
   const dx=e.clientX-swipe.x,dy=e.clientY-swipe.y;
-  if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy))step(swipe.ph,dx<0?1:-1);
+  if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){step(swipe.ph,dx<0?1:-1);swiped=Date.now()}
   swipe=null;
 });
 addEventListener("pointercancel",()=>{swipe=null});
@@ -431,16 +465,16 @@ function applyPick(card,b){
   if(b.dataset.imgs){const set=b.dataset.imgs.split(",");const ph=card.querySelector(".ph");ph.querySelector(":scope>img").src=set[0];ph.querySelectorAll(".thumbs,.nav").forEach(x=>x.remove());ph.insertAdjacentHTML("beforeend",thumbsHtml(set));}
   else if(b.dataset.img){card.querySelector(".ph>img").src=b.dataset.img;card.querySelectorAll(".thumbs button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.src===b.dataset.img))}
 }
-$("#list").addEventListener("click",e=>{
+document.addEventListener("click",e=>{
   const b=e.target.closest(".vars button");if(!b)return;
   b.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));
   applyPick(b.closest(".card-p"),b);
 });
-$("#list").addEventListener("change",e=>{
+document.addEventListener("change",e=>{
   const s=e.target.closest(".sel");if(!s)return;
   applyPick(s.closest(".card-p"),s.selectedOptions[0]);
 });
-$("#list").addEventListener("click",e=>{
+document.addEventListener("click",e=>{
   const b=e.target.closest(".thumbs button");if(!b)return;
   const ph=b.closest(".ph");ph.querySelector(":scope>img").src=b.dataset.src;
   ph.querySelectorAll(".thumbs button").forEach(x=>x.setAttribute("aria-pressed",x===b));
@@ -454,12 +488,37 @@ $("#chips").addEventListener("click",e=>{const b=e.target.closest(".chip");if(b)
 $("#catGrid").addEventListener("click",e=>{const b=e.target.closest(".cat");if(b){setCat(b.dataset.cat);$("#products").scrollIntoView({behavior:"smooth"})}});
 $("#q").addEventListener("input",render);
 render();
-/* opened from a product link (#p-name): show that product and highlight it */
-(function(){
-  const id=location.hash.slice(1);if(!id.startsWith("p-"))return;
-  const el=document.getElementById(id);if(!el)return;
-  setTimeout(()=>{el.scrollIntoView({behavior:"smooth",block:"center"});el.classList.add("hit")},300);
-})();
+/* product detail: full-screen view of one product, then more from the same section */
+const pd=$("#pd");let pdPushed=false;
+function openDetail(sl){
+  const p=P.find(x=>slug(x)===sl);if(!p)return closeDetail(true);
+  const c=CATS.find(x=>x.id===p.cat);
+  const more=P.filter(x=>x.cat===p.cat&&x!==p);
+  $("#pdTitle").textContent=c.name;
+  $("#pdMain").innerHTML=card(p,true).replace(` id="p-${sl}"`,"");
+  $("#pdMore").innerHTML=more.length?`<h2>منتجات مشابهة من ${c.name}</h2><div class="list">${more.map(x=>card(x).replace(/ id="p-[^"]+"/,"")).join("")}</div>`:"";
+  pd.hidden=false;document.body.classList.add("pd-open");pd.scrollTop=0;
+}
+function closeDetail(silent){
+  pd.hidden=true;document.body.classList.remove("pd-open");
+  if(!silent&&location.hash.startsWith("#p-")){
+    if(pdPushed){pdPushed=false;history.back()}
+    else history.replaceState(null,"",location.pathname+location.search);
+  }
+}
+function fromHash(){const h=location.hash.slice(1);if(h.startsWith("p-"))openDetail(h.slice(2));else if(!pd.hidden)closeDetail(true)}
+addEventListener("hashchange",fromHash);
+document.addEventListener("click",e=>{
+  const card=e.target.closest(".card-p");
+  if(!card||e.target.closest("button,a,select,label")||Date.now()-swiped<400)return;
+  if(card.closest("#pdMain"))return;
+  const sl=card.dataset.link.split("/p/")[1].replace("/","");
+  if(card.closest("#pdMore")){history.replaceState(null,"","#p-"+sl);openDetail(sl);return}
+  pdPushed=true;location.hash="p-"+sl;
+});
+$("#pdClose").addEventListener("click",()=>closeDetail());
+addEventListener("keydown",e=>{if(e.key==="Escape"&&!pd.hidden)closeDetail()});
+fromHash();
 
 /* cover photos: kitchen and bedroom crossfade every 6s; the buttons pick one */
 (function(){
