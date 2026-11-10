@@ -141,6 +141,11 @@ section{padding-block:56px}
 .price{font-size:26px;font-weight:800;background:var(--warm);-webkit-background-clip:text;background-clip:text;color:transparent;font-variant-numeric:tabular-nums}
 .price small{font-size:15px;font-weight:700}
 .price .ask-price{font-size:17px}
+/* sale pricing */
+.price .old{font-size:.6em;font-weight:600;color:var(--muted);-webkit-text-fill-color:var(--muted);margin-inline-end:6px}
+.price .off{display:inline-block;vertical-align:middle;margin-inline-start:6px;font-size:12px;font-weight:800;color:#fff;-webkit-text-fill-color:#fff;background:#d6322b;border-radius:999px;padding:2px 8px}
+.sale-bar{background:#d6322b;color:#fff;text-align:center;font-size:15px}
+.sale-bar .wrap{padding-block:9px}
 .ask{flex:none;text-align:center;font-size:14px;font-weight:700;color:#fff;background:var(--wa);text-decoration:none;padding:8px 14px;border-radius:999px}
 .ask:hover{filter:brightness(1.1)}
 .list .card-p .ph,.list .card-p h3{cursor:pointer}
@@ -245,6 +250,7 @@ footer .wrap{padding-block:24px;display:flex;justify-content:space-between;align
   </div>
 </header>
 
+<div id="saleBar" class="sale-bar" hidden><div class="wrap">🔥 <b>عرض خاص: خصم ٣٠٪ على كل المنتجات</b> <span id="saleEnd"></span></div></div>
 <main id="top">
   <div class="hero">
    <div class="stage">
@@ -395,6 +401,15 @@ const SITE="https://ama-company-ps.pages.dev";
 const slug=p=>p.imgs[0].replace(/^p-/,"").replace(/(-\d+)?\.jpg$/,"");
 /* prices stay in the product list; set to true to show them again */
 const SHOW_PRICES=true;
+/* sale: on between start and end (Palestine time); set on:false to stop it early */
+const SALE={on:true,pct:30,start:"2026-11-10T22:00:00+02:00",end:"2026-11-12T23:59:59+02:00",endLabel:"الخميس ١٢/١١"};
+const saleNow=()=>{const t=Date.now();return SALE.on&&t>=Date.parse(SALE.start)&&t<=Date.parse(SALE.end)};
+const priceHtml=a=>{
+  if(typeof a!=="number")return a;
+  if(!saleNow())return `${a} <small>₪</small>`;
+  const n=Math.round(a*(100-SALE.pct)/100);
+  return `<s class="old">${a} ₪</s>${n} <small>₪</small><span class="off">-${SALE.pct}٪</span>`;
+};
 let active="all";
 const $=s=>document.querySelector(s);
 
@@ -421,7 +436,7 @@ function card(p,full){
   const imgs=(c0&&c0.imgs)||(v0&&v0.imgs)||p.imgs;
   const thumbs=thumbsHtml(imgs);
   const amount=v0?v0.price:p.price;
-  const price=!SHOW_PRICES?`<span class="ask-price">اسأل عن السعر</span>`:(typeof amount==="number"?`${amount} <small>₪</small>`:amount);
+  const price=!SHOW_PRICES?`<span class="ask-price">اسأل عن السعر</span>`:priceHtml(amount);
   const vars=p.variants&&p.variants.length>2?`<label class="pick"><span class="sr">اختار المقاس</span><select class="sel">${p.variants.map((v,i)=>`<option value="${i}" data-label="${v.label}" data-price="${v.price}" data-img="${v.img||""}" data-imgs="${(v.imgs||[]).join(",")}">${v.label}</option>`).join("")}</select></label>`:p.variants?`<div class="vars" role="group" aria-label="الخيار">${p.variants.map((v,i)=>`<button type="button" aria-pressed="${i===0}" data-label="${v.label}" data-price="${v.price}" data-img="${v.img||""}" data-imgs="${(v.imgs||[]).join(",")}">${v.label}</button>`).join("")}</div>`:"";
   const cols=p.colors?`<div class="vars" role="group" aria-label="اللون">${p.colors.map((v,i)=>`<button type="button" aria-pressed="${i===0}" data-label="${v.label}" data-imgs="${v.imgs.join(",")}">${v.label}</button>`).join("")}</div>`:"";
   const picks=[v0&&v0.label,c0&&c0.label].filter(Boolean).join(" - ");
@@ -458,7 +473,7 @@ addEventListener("pointerup",e=>{
 addEventListener("pointercancel",()=>{swipe=null});
 /* option picker (size, side, colour): swaps price, photos and the WhatsApp message */
 function applyPick(card,b){
-  if(SHOW_PRICES&&b.dataset.price)card.querySelector(".price").innerHTML=`${b.dataset.price} <small>₪</small>`;
+  if(SHOW_PRICES&&b.dataset.price)card.querySelector(".price").innerHTML=priceHtml(+b.dataset.price);
   const sel=card.querySelector(".sel");
   const picks=[sel&&sel.selectedOptions[0].dataset.label,...[...card.querySelectorAll('.vars button[aria-pressed="true"]')].map(x=>x.dataset.label)].filter(Boolean).join(" - ");
   card.querySelector(".ask").href=WA+encodeURIComponent("مرحبا، بدي أطلب: "+card.dataset.name+(picks?" ("+picks+")":"")+"\n"+card.dataset.link);
@@ -487,6 +502,7 @@ function setCat(id){
 $("#chips").addEventListener("click",e=>{const b=e.target.closest(".chip");if(b)setCat(b.dataset.f)});
 $("#catGrid").addEventListener("click",e=>{const b=e.target.closest(".cat");if(b){setCat(b.dataset.cat);$("#products").scrollIntoView({behavior:"smooth"})}});
 $("#q").addEventListener("input",render);
+if(saleNow()&&SHOW_PRICES){$("#saleBar").hidden=false;$("#saleEnd").textContent="لحد "+SALE.endLabel}
 render();
 /* product detail: full-screen view of one product, then more from the same section */
 const pd=$("#pd");let pdPushed=false;
