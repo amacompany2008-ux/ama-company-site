@@ -118,8 +118,7 @@ section{padding-block:56px}
 .chip{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--fg);font:inherit;font-size:14px;cursor:pointer}
 .chip[aria-pressed="true"]{background:var(--accent);color:var(--bg);border-color:var(--accent)}
 /* product cards: light photo tile (catalogue shots are on pale grey), then name, specs, price, order button */
-.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px}
-@media (max-width:560px){.list{grid-template-columns:1fr}}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
 .card-p{background:var(--bg);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
 .ph{position:relative;aspect-ratio:1/1;max-width:100%;background:#eceae7}
 .ph img{width:100%;height:100%;object-fit:contain;display:block}
@@ -147,6 +146,27 @@ section{padding-block:56px}
 .price .ask-price{font-size:17px}
 .ask{flex:none;font-size:14px;font-weight:700;color:#fff;background:var(--wa);text-decoration:none;padding:8px 14px;border-radius:999px}
 .ask:hover{filter:brightness(1.1)}
+/* phones: two compact cards per row; thumbnails hidden (swipe/arrows still browse photos) */
+@media (max-width:600px){
+  .list{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .card-p{border-radius:12px}
+  .thumbs{display:none}
+  .nav{width:26px;height:26px;font-size:18px}
+  .nav-next{left:4px}.nav-prev{right:4px}
+  .tag{top:6px;right:6px;font-size:10px;padding:2px 7px}
+  .info{padding:10px 10px 12px;gap:5px}
+  .info h3{font-size:14px;line-height:1.4}
+  .specs{gap:4px;margin:0}
+  .specs li{font-size:11px;padding:0 5px}
+  .specs li:nth-child(n+3){display:none}
+  .vars{gap:4px}
+  .vars button{font-size:11px;padding:2px 7px}
+  .buy{flex-direction:column;align-items:stretch;gap:6px;padding-top:6px}
+  .price{font-size:18px}
+  .price .ask-price{font-size:13px}
+  .ask{text-align:center;font-size:12px;padding:7px 8px}
+  header .btn-wa{display:none}
+}
 .empty{padding:24px 0;color:var(--muted)}
 .note{margin-top:18px;font-size:14px;color:var(--muted)}
 
