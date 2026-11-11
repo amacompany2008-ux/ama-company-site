@@ -295,13 +295,6 @@ footer .wrap{padding-block:24px;display:flex;justify-content:space-between;align
       </div>
     </div>
    </div>
-    <div class="band">
-      <div class="wrap facts">
-        <div><b>فروعنا</b><span class="br"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>نابلس – <strong>دوار زواتا</strong></span><span class="br"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>نابلس – <strong>شارع المدارس</strong></span></div>
-        <div><b>توصيل</b><span>لكل مدن الضفة والقدس والداخل</span></div>
-        <div><b>الأقسام</b><span id="catNames">المطابخ · غرف النوم</span></div>
-      </div>
-    </div>
   </div>
 
   <section id="cats">
@@ -458,7 +451,7 @@ $("#catGrid").innerHTML=CATS.map(c=>{
   return `<button class="cat" type="button" data-cat="${c.id}" style="--c:var(--${c.c});--cs:var(--${c.c}-soft)">${c.img?`<span class="cimg"><img src="${c.img}" alt="" loading="lazy"></span>`:""}<span class="cbody"><span class="ico"><svg viewBox="0 0 24 24">${c.icon}</svg></span><h3>${c.name}</h3><p>${c.desc}</p><span class="n">${n?n+" منتج":"المنتجات قريباً"}</span></span></button>`}).join("");
 
 /* band lists every category, so new sections show up here automatically */
-$("#catNames").textContent=CATS.map(c=>c.name.replace("إكسسوارات ","")).join(" · ");
+
 
 $("#chips").innerHTML=[{id:"all",name:"الكل"},...CATS].map(c=>`<button class="chip" type="button" data-f="${c.id}" aria-pressed="${c.id==="all"}">${c.name}</button>`).join("");
 
