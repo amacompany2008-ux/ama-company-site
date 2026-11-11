@@ -97,6 +97,7 @@ section{padding-block:56px}
 .cat .cimg{display:block;aspect-ratio:16/10;max-width:100%;overflow:hidden;background:var(--line)}
 .cat .cimg img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
 .cat:hover .cimg img{transform:scale(1.04)}
+.hl{color:#e0a106;font-weight:800}
 .cat .cbody{display:flex;flex-direction:column;gap:8px;padding:22px 24px 24px}
 .cat .cbody .ico{margin-top:-46px;border:3px solid var(--surface);box-sizing:content-box}
 @media (prefers-reduced-motion:reduce){.cat .cimg img{transition:none}}
@@ -288,7 +289,7 @@ footer .wrap{padding-block:24px;display:flex;justify-content:space-between;align
   <section id="cats">
     <div class="wrap">
       <div class="head">
-        <div><h2>الأقسام</h2><p>اختار القسم وبتطلعلك منتجاته تحت.</p></div>
+        <div><h2>الأقسام</h2><p><span class="hl">اختار القسم</span> وبتطلعلك منتجاته تحت.</p></div>
       </div>
       <div class="cats" id="catGrid"></div>
     </div>
