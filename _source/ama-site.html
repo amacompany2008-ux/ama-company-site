@@ -400,7 +400,7 @@ const WA="https://wa.me/972567904444?text=";
 const SITE="https://ama-company-ps.pages.dev";
 const slug=p=>p.imgs[0].replace(/^p-/,"").replace(/(-\d+)?\.jpg$/,"");
 /* prices stay in the product list; set to true to show them again */
-const SHOW_PRICES=false;
+const SHOW_PRICES=true;
 /* sale: on between start and end (Palestine time); set on:false to stop it early */
 const SALE={on:false,pct:30,start:"2026-11-10T22:00:00+02:00",end:"2026-11-12T23:59:59+02:00",endLabel:"الخميس ١٢/١١"};
 const saleNow=()=>{const t=Date.now();return SALE.on&&t>=Date.parse(SALE.start)&&t<=Date.parse(SALE.end)};
