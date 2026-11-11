@@ -209,6 +209,18 @@ body.pd-open{overflow:hidden}
 .note{margin-top:18px;font-size:14px;color:var(--muted)}
 
 /* why */
+/* customer reviews: grid on desktop, swipe row on phones */
+.reviews{background:var(--surface);border-block:1px solid var(--line)}
+.rvs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.rv{margin:0;background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:20px 22px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.rv .q{font-family:Georgia,serif;font-size:56px;line-height:.6;height:26px;color:var(--amber);font-weight:700}
+.rv blockquote{margin:0;font-size:18px;font-weight:600;line-height:1.7;flex:1}
+.rv figcaption{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+@media (max-width:760px){
+  .rvs{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding-bottom:8px;-webkit-overflow-scrolling:touch}
+  .rv{flex:0 0 78%;scroll-snap-align:start}
+  .rv blockquote{font-size:16px}
+}
 .why{display:grid;grid-template-columns:repeat(5,1fr);gap:24px}
 @media (max-width:980px){.why{grid-template-columns:repeat(2,1fr)}.why div:first-child{grid-column:1/-1}}
 @media (max-width:520px){.why{grid-template-columns:1fr}}
@@ -318,6 +330,20 @@ footer .wrap{padding-block:24px;display:flex;justify-content:space-between;align
         <div><h3>أسعار منافسة</h3><p>أسعار مناسبة للورشة وللبيت، وبجودة ما بتتنازل عنها.</p></div>
         <div><h3>جودة مضمونة</h3><p>قطع أصلية من ماركات معروفة زي ZOVAXA، مجرّبة لسنين.</p></div>
         <div><h3>تشكيلة كبيرة</h3><p>مئات القطع للمطابخ وغرف النوم بمكان واحد.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="reviews" class="reviews">
+    <div class="wrap">
+      <div class="head"><div><h2>رأيكم بيفرّحنا</h2><p>كلام زباينّا زي ما وصلنا على الواتساب.</p></div></div>
+      <div class="rvs">
+        <figure class="rv"><span class="q" aria-hidden="true">”</span><blockquote>بجننوا 😍 المرة الجاي بوخذ تبعت البلاطين.</blockquote><figcaption>زبون من الواتساب · منظم إكسسوار</figcaption></figure>
+        <figure class="rv"><span class="q" aria-hidden="true">”</span><blockquote>المنتج بجنن، الله يعطيكم العافية.</blockquote><figcaption>زبون من الواتساب</figcaption></figure>
+        <figure class="rv"><span class="q" aria-hidden="true">”</span><blockquote>يسعد صباحكم، أخدت منظم المطبخ بجنن، يسلمو إيديكم. بستنى السطل يتوفر.</blockquote><figcaption>زبون من الواتساب · منظم المطبخ</figcaption></figure>
+        <figure class="rv"><span class="q" aria-hidden="true">”</span><blockquote>يعطيكم العافية 🌷 البضاعة بتجنن وعالطلب تماماً.</blockquote><figcaption>زبون من الواتساب</figcaption></figure>
+        <figure class="rv"><span class="q" aria-hidden="true">”</span><blockquote>كان كل إشي تمام التمام، يسلم إيديكم.</blockquote><figcaption>زبون من الواتساب</figcaption></figure>
+        <figure class="rv"><span class="q" aria-hidden="true">”</span><blockquote>شكراً إلكم، كيف ما بدي بزبط 👍</blockquote><figcaption>زبون من الواتساب</figcaption></figure>
       </div>
     </div>
   </section>
