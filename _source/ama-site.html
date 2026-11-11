@@ -93,7 +93,13 @@ section{padding-block:56px}
 .cats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 @media (max-width:900px){.cats{grid-template-columns:repeat(2,1fr)}.cats .cat:last-child:nth-child(odd){grid-column:1/-1}}
 @media (max-width:600px){.cats{grid-template-columns:1fr}}
-.cats .cat{padding:28px}
+.cats .cat{padding:0;overflow:hidden;gap:0}
+.cat .cimg{display:block;aspect-ratio:16/10;max-width:100%;overflow:hidden;background:var(--line)}
+.cat .cimg img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.cat:hover .cimg img{transform:scale(1.04)}
+.cat .cbody{display:flex;flex-direction:column;gap:8px;padding:22px 24px 24px}
+.cat .cbody .ico{margin-top:-46px;border:3px solid var(--surface);box-sizing:content-box}
+@media (prefers-reduced-motion:reduce){.cat .cimg img{transition:none}}
 .cats .cat h3{font-size:24px}
 .cat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:8px;cursor:pointer;text-align:right;font:inherit;color:inherit;transition:border-color .15s,transform .15s}
 .cat:hover{border-color:var(--c);transform:translateY(-2px)}
@@ -358,9 +364,9 @@ footer .wrap{padding-block:24px;display:flex;justify-content:space-between;align
 
 <script>
 const CATS=[
- {id:"kitchen",c:"accent",name:"إكسسوارات المطابخ",desc:"سلال المونة، حلول الزوايا، سلال الزبالة المخفية، ومنظمات الجوارير",icon:'<path d="M4 10h16v10H4z"/><path d="M4 10l2-5h12l2 5"/><path d="M10 14h4"/>'},
- {id:"closet",c:"lilac",name:"إكسسوارات غرف النوم",desc:"علاقات سحب، رفوف أحذية، جرارات إكسسوارات، وطاولة كوي مخفية",icon:'<path d="M6 3h12v18H6z"/><path d="M12 3v18"/><path d="M10 11v2M14 11v2"/>'},
- {id:"stone",c:"amber",name:"بديل حجر",desc:"ألواح بديل حجر للجدران والديكور الداخلي والخارجي",icon:'<path d="M3 5h8v5H3zM13 5h8v5h-8zM3 14h5v5H3zM10 14h11v5H10z"/>'}
+ {id:"kitchen",c:"accent",img:"hero-kitchen.jpg",name:"إكسسوارات المطابخ",desc:"سلال المونة، حلول الزوايا، سلال الزبالة المخفية، ومنظمات الجوارير",icon:'<path d="M4 10h16v10H4z"/><path d="M4 10l2-5h12l2 5"/><path d="M10 14h4"/>'},
+ {id:"closet",c:"lilac",img:"hero-bedroom.jpg",name:"إكسسوارات غرف النوم",desc:"علاقات سحب، رفوف أحذية، جرارات إكسسوارات، وطاولة كوي مخفية",icon:'<path d="M6 3h12v18H6z"/><path d="M12 3v18"/><path d="M10 11v2M14 11v2"/>'},
+ {id:"stone",c:"amber",img:"p-stone1-1.jpg",name:"بديل حجر",desc:"ألواح بديل حجر للجدران والديكور الداخلي والخارجي",icon:'<path d="M3 5h8v5H3zM13 5h8v5h-8zM3 14h5v5H3zM10 14h11v5H10z"/>'}
 ];
 /* products: add one object per item; imgs are files published next to the page */
 const P=[
@@ -415,7 +421,7 @@ const $=s=>document.querySelector(s);
 
 $("#catGrid").innerHTML=CATS.map(c=>{
   const n=P.filter(p=>p.cat===c.id).length;
-  return `<button class="cat" type="button" data-cat="${c.id}" style="--c:var(--${c.c});--cs:var(--${c.c}-soft)"><span class="ico"><svg viewBox="0 0 24 24">${c.icon}</svg></span><h3>${c.name}</h3><p>${c.desc}</p><span class="n">${n?n+" منتج":"المنتجات قريباً"}</span></button>`}).join("");
+  return `<button class="cat" type="button" data-cat="${c.id}" style="--c:var(--${c.c});--cs:var(--${c.c}-soft)">${c.img?`<span class="cimg"><img src="${c.img}" alt="" loading="lazy"></span>`:""}<span class="cbody"><span class="ico"><svg viewBox="0 0 24 24">${c.icon}</svg></span><h3>${c.name}</h3><p>${c.desc}</p><span class="n">${n?n+" منتج":"المنتجات قريباً"}</span></span></button>`}).join("");
 
 /* band lists every category, so new sections show up here automatically */
 $("#catNames").textContent=CATS.map(c=>c.name.replace("إكسسوارات ","")).join(" · ");
