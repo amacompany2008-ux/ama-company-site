@@ -218,19 +218,20 @@ body.pd-open{overflow:hidden}
 /* why */
 /* customer reviews: grid on desktop, swipe row on phones */
 .reviews{background:var(--surface);border-block:1px solid var(--line)}
-.rvs{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;padding-bottom:4px}
-.rvs::-webkit-scrollbar{display:none}
-.rvs .rv{flex:0 0 calc((100% - 32px)/3);scroll-snap-align:start}
+/* reviews: one card at a time, sliding up */
+.rvs{position:relative;max-width:640px;margin-inline:auto;overflow:hidden;transition:height .4s}
+.rvs .rv{position:absolute;inset:0 0 auto 0;opacity:0;transform:translateY(60%);transition:transform .6s ease,opacity .6s ease;pointer-events:none}
+.rvs .rv.on{position:relative;opacity:1;transform:none;pointer-events:auto}
+.rvs .rv.out{opacity:0;transform:translateY(-60%)}
 .rv-dots{display:flex;justify-content:center;gap:6px;margin-top:16px}
 .rv-dots button{width:8px;height:8px;padding:0;border:0;border-radius:4px;background:var(--line);cursor:pointer;transition:width .3s,background .3s}
 .rv-dots button[aria-current="true"]{width:22px;background:var(--accent)}
+@media (prefers-reduced-motion:reduce){.rvs .rv{transition:none}}
 .rv{margin:0;background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:20px 22px;display:flex;flex-direction:column;gap:10px;min-width:0}
 .rv .q{font-family:Georgia,serif;font-size:56px;line-height:.6;height:26px;color:var(--amber);font-weight:700}
 .rv blockquote{margin:0;font-size:18px;font-weight:600;line-height:1.7;flex:1}
 .rv figcaption{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
 @media (max-width:760px){
-  .rvs{gap:12px}
-  .rvs .rv{flex:0 0 82%}
   .rv blockquote{font-size:16px}
 }
 .why{display:grid;grid-template-columns:repeat(5,1fr);gap:24px}
@@ -553,21 +554,21 @@ $("#catGrid").addEventListener("click",e=>{const b=e.target.closest(".cat");if(b
 $("#q").addEventListener("input",render);
 if(saleNow()&&SHOW_PRICES){$("#saleBar").hidden=false;$("#saleEnd").textContent="لحد "+SALE.endLabel}
 render();
-/* reviews: slide one card at a time every few seconds; pause on hover/touch; dots jump */
+/* reviews: show one card, every few seconds the next one slides up into place */
 (function(){
   const box=$(".rvs"),cards=[...box.children],dots=$("#rvDots");let i=0,timer,visible=false,held=false;
   dots.innerHTML=cards.map((_,k)=>`<button type="button" aria-label="رأي ${k+1}"></button>`).join("");
-  const mark=()=>dots.querySelectorAll("button").forEach((d,k)=>d.setAttribute("aria-current",k===i));
-  const go=k=>{i=(k+cards.length)%cards.length;const c=cards[i].getBoundingClientRect(),b=box.getBoundingClientRect();box.scrollBy({left:c.right-b.right});mark()};
-  const lastStart=()=>{const b=box.getBoundingClientRect();for(let k=0;k<cards.length;k++){if(cards[cards.length-1].getBoundingClientRect().left>=b.left-2&&cards[k].getBoundingClientRect().right<=b.right+2)return k}return cards.length-1};
-  const tick=()=>{if(!visible||held)return;go(i>=lastStart()?0:i+1)};
-  const start=()=>{clearInterval(timer);if(!matchMedia("(prefers-reduced-motion: reduce)").matches)timer=setInterval(tick,3500)};
-  dots.addEventListener("click",e=>{const d=e.target.closest("button");if(!d)return;go([...dots.children].indexOf(d));start()});
+  const show=k=>{
+    const prev=cards[i];i=(k+cards.length)%cards.length;
+    if(prev!==cards[i]){prev.classList.remove("on");prev.classList.add("out");setTimeout(()=>prev.classList.remove("out"),650)}
+    cards[i].classList.add("on");
+    dots.querySelectorAll("button").forEach((d,n)=>d.setAttribute("aria-current",n===i));
+  };
+  const start=()=>{clearInterval(timer);if(!matchMedia("(prefers-reduced-motion: reduce)").matches)timer=setInterval(()=>{if(visible&&!held)show(i+1)},4000)};
+  dots.addEventListener("click",e=>{const d=e.target.closest("button");if(!d)return;show([...dots.children].indexOf(d));start()});
   box.addEventListener("pointerenter",()=>held=true);box.addEventListener("pointerleave",()=>held=false);
-  box.addEventListener("touchstart",()=>{held=true},{passive:true});box.addEventListener("touchend",()=>{setTimeout(()=>held=false,4000)});
-  box.addEventListener("scroll",()=>{const b=box.getBoundingClientRect();let best=0,d=1e9;cards.forEach((c,k)=>{const x=Math.abs(c.getBoundingClientRect().right-b.right);if(x<d){d=x;best=k}});if(best!==i){i=best;mark()}},{passive:true});
   new IntersectionObserver(es=>{visible=es[0].isIntersecting}).observe(box);
-  mark();start();
+  show(0);start();
 })();
 /* product detail: full-screen view of one product, then more from the same section */
 const pd=$("#pd");let pdPushed=false;
