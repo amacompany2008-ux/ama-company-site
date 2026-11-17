@@ -79,8 +79,8 @@ nav a:hover{color:#fff}
 .band-hint{margin:0 0 10px;font-size:15px;color:#e3ecef}
 .facts{padding-block:0}
 /* section tiles in the band: photo with name over it, three across on every screen */
-#catGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.bcat{all:unset;box-sizing:border-box;cursor:pointer;position:relative;display:flex;flex-direction:column;justify-content:flex-end;aspect-ratio:16/9;max-width:100%;min-width:0;border-radius:14px;overflow:hidden;padding:14px 16px;isolation:isolate;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+#catGrid{display:grid;grid-template-columns:repeat(var(--n,3),minmax(0,1fr));gap:14px}
+.bcat{all:unset;box-sizing:border-box;cursor:pointer;position:relative;display:flex;flex-direction:column;justify-content:flex-end;aspect-ratio:16/9;max-width:100%;min-width:0;border-radius:14px;overflow:hidden;padding:14px 16px;isolation:isolate;box-shadow:0 6px 18px rgba(0,0,0,.25);background:#4c636d}
 .bcat img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform .4s}
 .bcat::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(to top,rgba(20,28,33,.85) 0%,rgba(20,28,33,.35) 55%,rgba(20,28,33,0) 100%)}
 .bcat:hover img{transform:scale(1.06)}
@@ -88,7 +88,7 @@ nav a:hover{color:#fff}
 .bcat b{font-family:var(--display);font-size:22px;font-weight:800;color:#fff;line-height:1.25}
 .bcat span{font-size:13px;color:#e3ecef;font-weight:600}
 @media (max-width:600px){
-  #catGrid{gap:8px}
+  #catGrid{gap:8px;grid-template-columns:repeat(3,minmax(0,1fr))}
   .bcat{aspect-ratio:3/4;padding:10px;border-radius:12px}
   .bcat b{font-size:15px}
   .bcat span{font-size:11px}
@@ -513,9 +513,12 @@ const $=s=>document.querySelector(s);
 
 function boot(){
 
+/* sections come from the dashboard too: up to four tiles a row on wide screens; a section without its own photo borrows its first product's */
+$("#catGrid").style.setProperty("--n",Math.min(Math.max(CATS.length,1),4));
 $("#catGrid").innerHTML=CATS.map(c=>{
   const n=P.filter(p=>p.cat===c.id).length;
-  return `<button class="bcat" type="button" data-cat="${c.id}"><img src="${c.img}" alt="" loading="lazy"><b>${c.name.replace("إكسسوارات ","")}</b><span>${n?n+" منتج":"قريباً"}</span></button>`;
+  const img=c.img||(P.find(p=>p.cat===c.id)||{imgs:[]}).imgs[0];
+  return `<button class="bcat" type="button" data-cat="${c.id}">${img?`<img src="${img}" alt="" loading="lazy">`:""}<b>${c.name.replace("إكسسوارات ","")}</b><span>${n?n+" منتج":"قريباً"}</span></button>`;
 }).join("");
 
 /* band lists every category, so new sections show up here automatically */

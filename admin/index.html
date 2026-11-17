@@ -121,6 +121,16 @@ body.sheet-open{overflow:hidden}
 .err{color:var(--bad);font-size:13px;font-weight:700}
 
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:12px;padding:10px 18px;z-index:60;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.25);max-width:90vw;text-align:center}
+.catrow{display:grid;grid-template-columns:150px 1fr auto;gap:14px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.catimg{display:grid;gap:6px}
+.catimg .ph{aspect-ratio:16/10;border-radius:10px;overflow:hidden;background:var(--accent);display:grid;place-items:center;color:#fff;font-size:12px;text-align:center}
+.catimg .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.catimg label{justify-content:center;cursor:pointer}
+.catf{display:grid;gap:8px;min-width:0}
+.sw{display:flex;gap:8px;flex-wrap:wrap}
+.sw button{width:34px;height:34px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px var(--line);cursor:pointer}
+.sw button[aria-pressed="true"]{box-shadow:0 0 0 2px var(--copper)}
+@media (max-width:640px){.catrow{grid-template-columns:110px 1fr}.catrow .acts{grid-column:1/-1;justify-content:flex-start}}
 .hist{display:grid;gap:6px}
 .hrow{display:flex;gap:10px;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px;flex-wrap:wrap}
 .hrow span{font-size:13px;color:var(--muted)}
@@ -144,6 +154,7 @@ body.sheet-open{overflow:hidden}
   <div id="notes"></div>
   <div class="tabs" role="tablist">
     <button class="tab" role="tab" aria-selected="true" data-tab="products" type="button">المنتجات</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="cats" type="button">الأقسام</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="settings" type="button">الأسعار والخصم</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="history" type="button">النسخ السابقة</button>
   </div>
@@ -155,6 +166,14 @@ body.sheet-open{overflow:hidden}
     </div>
     <div class="chips" id="cats"></div>
     <div class="list" id="list" style="margin-top:12px"><div class="empty">بحمّل المنتجات…</div></div>
+  </section>
+
+  <section id="tab-cats" hidden>
+    <div class="bar">
+      <p class="hint" style="flex:1 1 220px;margin:0;font-size:13px">الأقسام بتطلع على الموقع كمربعات بالصور تحت الغلاف، وكأزرار فوق المنتجات. بعد ما تضيف قسم، ضيف منتجات واختار إلها هالقسم.</p>
+      <button class="btn ok" id="newCat" type="button">＋ قسم جديد</button>
+    </div>
+    <div class="list" id="catList"></div>
   </section>
 
   <section id="tab-settings" hidden>
@@ -238,7 +257,7 @@ function isDirty(){return DATA&&JSON.stringify(DATA)!==saved}
 function markDirty(){const d=isDirty();$("#dirty").hidden=!d;$("#discard").hidden=!d;$("#save").disabled=!d}
 addEventListener("beforeunload",e=>{if(isDirty()){e.preventDefault();e.returnValue=""}});
 
-function renderAll(){renderCats();renderList();renderSettings();markDirty()}
+function renderAll(){renderCats();renderList();renderCatList();renderSettings();markDirty()}
 
 /* ---------- products list ---------- */
 function priceText(p){
@@ -448,6 +467,59 @@ $("#edClose").addEventListener("click",closeEditor);
 $("#new").addEventListener("click",()=>openEditor(-1));
 addEventListener("keydown",e=>{if(e.key==="Escape"&&ED)closeEditor()});
 
+/* ---------- sections ---------- */
+const SW=[["accent","#4c636d","أزرق رمادي"],["lilac","#819aa2","رمادي فاتح"],["amber","#69594a","نحاسي"],["berry","#31424b","كحلي"]];
+function renderCatList(){
+  $("#catList").innerHTML=DATA.cats.map((c,i)=>{
+    const n=DATA.products.filter(p=>p.cat===c.id).length;
+    const img=c.img||(DATA.products.find(p=>p.cat===c.id)||{imgs:[]}).imgs[0];
+    return `<div class="catrow" data-ci="${i}">
+      <div class="catimg"><div class="ph">${img?`<img src="${esc(pic(img))}" alt="">`:"بدون صورة"}</div>
+        <label class="btn sm">📷 ${c.img?"غيّر الصورة":"حط صورة"}<input type="file" accept="image/*" data-cup="${i}" hidden></label></div>
+      <div class="catf">
+        <label class="f">اسم القسم<input data-cn="${i}" value="${esc(c.name)}" maxlength="80" placeholder="مثلاً: ديكورات جدران"></label>
+        <div class="f"><span>لون العلامة على صور المنتجات</span><div class="sw">${SW.map(([k,hex,t])=>`<button type="button" data-cc="${k}" aria-pressed="${c.c===k}" style="background:${hex}" title="${t}" aria-label="${t}"></button>`).join("")}</div></div>
+        <div class="hint">${n?ar(n)+" منتج بهالقسم":"ما في منتجات لسا. على الموقع بيطلع «قريباً»."}</div>
+      </div>
+      <div class="acts">
+        <button class="icon" data-ca="up" type="button" aria-label="انقل لفوق">↑</button>
+        <button class="icon" data-ca="down" type="button" aria-label="انقل لتحت">↓</button>
+        <button class="icon" data-ca="del" type="button" aria-label="احذف القسم">🗑</button>
+      </div></div>`;
+  }).join("");
+}
+$("#newCat").addEventListener("click",()=>{
+  const used=DATA.cats.map(c=>c.c),col=(SW.find(s=>!used.includes(s[0]))||SW[DATA.cats.length%SW.length])[0];
+  DATA.cats.push({id:"c"+Date.now().toString(36).slice(-6),c:col,img:"",name:"",desc:"",icon:""});
+  renderCatList();renderCats();markDirty();
+  const inp=document.querySelector(`[data-cn="${DATA.cats.length-1}"]`);inp.scrollIntoView({block:"center"});inp.focus();
+});
+$("#catList").addEventListener("input",e=>{
+  const i=e.target.dataset.cn;if(i===undefined)return;
+  DATA.cats[+i].name=e.target.value;renderCats();markDirty();
+});
+$("#catList").addEventListener("click",e=>{
+  const row=e.target.closest(".catrow");if(!row)return;const i=+row.dataset.ci,C=DATA.cats,c=C[i];
+  const sw=e.target.closest("[data-cc]");if(sw){c.c=sw.dataset.cc;renderCatList();markDirty();return}
+  const b=e.target.closest("[data-ca]");if(!b)return;
+  if(b.dataset.ca==="up"&&i>0)[C[i-1],C[i]]=[C[i],C[i-1]];
+  if(b.dataset.ca==="down"&&i<C.length-1)[C[i+1],C[i]]=[C[i],C[i+1]];
+  if(b.dataset.ca==="del"){
+    const n=DATA.products.filter(p=>p.cat===c.id).length;
+    if(n){toast("بهالقسم "+ar(n)+" منتج. انقلهم لقسم ثاني أو احذفهم أول، وبعدين احذف القسم.",4500);return}
+    if(C.length<2){toast("لازم يضل قسم واحد على الأقل.");return}
+    if(b.dataset.sure!=="1"){b.dataset.sure="1";b.textContent="متأكد؟";b.style.width="auto";b.style.padding="0 8px";b.style.color="var(--bad)";setTimeout(()=>{if(b.isConnected){b.dataset.sure="";b.textContent="🗑";b.style.cssText=""}},3500);return}
+    C.splice(i,1);if(catF===c.id)catF="all";toast("انحذف القسم. بتقدر تكبس «تراجع» فوق إذا غلط.");
+  }
+  renderCatList();renderCats();renderList();markDirty();
+});
+$("#catList").addEventListener("change",async e=>{
+  const inp=e.target.closest("[data-cup]");if(!inp||!inp.files.length)return;
+  const c=DATA.cats[+inp.dataset.cup];toast("برفع الصورة…",8000);
+  try{c.img=await upload(inp.files[0]);renderCatList();markDirty();toast("تمام. لا تنسى «حفظ ونشر» فوق.")}
+  catch(err){toast("ما زبط رفع الصورة: "+err.message,4500)}
+});
+
 /* ---------- settings ---------- */
 const toLocal=iso=>{if(!iso)return"";const d=new Date(iso);if(isNaN(d))return"";const p=new Date(d.getTime()+2*3600e3);return p.toISOString().slice(0,16)};
 const fromLocal=v=>v?v+":00+02:00":"";
@@ -481,10 +553,13 @@ $("#hist").addEventListener("click",async e=>{
 document.querySelector(".tabs").addEventListener("click",e=>{
   const t=e.target.closest(".tab");if(!t)return;
   document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",x===t));
-  ["products","settings","history"].forEach(k=>$("#tab-"+k).hidden=k!==t.dataset.tab);
+  ["products","cats","settings","history"].forEach(k=>$("#tab-"+k).hidden=k!==t.dataset.tab);
   if(t.dataset.tab==="history")loadHistory();
 });
 $("#save").addEventListener("click",async()=>{
+  const noName=DATA.cats.findIndex(c=>!c.name.trim());
+  if(noName>=0){document.querySelector('[data-tab="cats"]').click();const i=document.querySelector(`[data-cn="${noName}"]`);i&&i.focus();toast("في قسم بدون اسم. اكتبله اسم أو احذفه.",4500);return}
+  DATA.cats.forEach(c=>c.name=c.name.trim());
   const b=$("#save");b.disabled=true;b.textContent="بحفظ…";
   try{
     const d=await api("/api/admin/catalog",{method:"PUT",headers:{"content-type":"application/json"},body:JSON.stringify({...DATA,baseSavedAt:base})});
