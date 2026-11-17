@@ -34,8 +34,8 @@
 - **الدومين:** لسا ما انشرى (GoDaddy). لما يتربط: غيّر `SITE` بالمصدر وبـ build.py.
 - **روابط خرائط جوجل للفرعين:** لسا ما وصلت.
 
-## لوحة التحكم (فرع `admin`)
-- الصفحة: `/admin/` (عربي). الدخول محمي بـ Cloudflare Access (كود على إيميل الشركة).
+## لوحة التحكم (شغّالة على main من 17/11/2026)
+- الصفحة: https://ama-company-ps.pages.dev/admin/ (عربي). الدخول محمي بـ Cloudflare Access (كود على ama.company.2008@icloud.com). فريق Access: ama-company. تطبيق Access: "ama-company-ps - Cloudflare Pages" (*.ama-company-ps.pages.dev + /admin + /api/admin).
 - المنتجات والأقسام والإعدادات محفوظة كمستند JSON واحد بـ D1 (جدول `doc`، مفتاح `catalog`)، وكل حفظ بينسخ بجدول `history` (آخر ٦٠).
 - قبل أول حفظ، الموقع والـ API بيستعملوا `data/seed.json` (بيطلعه build.py من `_source/ama-site.html`).
 - الصفحة الرئيسية بتجيب `/api/catalog` قبل ما ترسم، وإذا فشل بتستعمل النسخة المضمّنة جوّاها.
