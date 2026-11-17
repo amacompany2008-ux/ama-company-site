@@ -82,6 +82,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 label.f{display:grid;gap:4px;font-size:13px;font-weight:700;color:var(--ink)}
 label.f input,label.f select,label.f textarea{border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:#fff;font-weight:400;font-size:15px;width:100%;min-width:0}
 .hint{font-size:12px;color:var(--muted);font-weight:400}
+div.f{display:grid;gap:4px;font-size:13px;font-weight:700;color:var(--ink);align-content:start}
+.seg.stock{display:flex}.seg.stock button{flex:1;padding:9px 12px}
 
 /* editor sheet */
 body.sheet-open{overflow:hidden}
@@ -97,7 +99,10 @@ body.sheet-open{overflow:hidden}
 .vrow{display:grid;grid-template-columns:1fr 96px 84px 36px;gap:6px;align-items:center}
 .vhead{font-size:12px;font-weight:700;color:var(--muted)}
 @media (max-width:480px){.vrow{grid-template-columns:1fr 70px 58px 32px;gap:4px}.vrow input{padding:7px 6px}}
-.vrow.is-out input[data-v=qty]{border-color:var(--bad);color:var(--bad);font-weight:700}
+.stk{border:1px solid #a9dbbd;background:#e8f6ee;color:var(--ok);border-radius:8px;padding:7px 4px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap}
+.stk[aria-pressed="true"]{border-color:#f3b9b3;background:#fdeceb;color:var(--bad)}
+.seg.stock button[data-stock="in"][aria-pressed="true"]{background:var(--ok)}
+.seg.stock button[data-stock="out"][aria-pressed="true"]{background:var(--bad)}
 .badge.out{background:#fdeceb;color:var(--bad)}
 .badge.low{background:#fff3df;color:#8a5a12}
 .vrow input{border:1px solid var(--line);border-radius:8px;padding:7px 9px;min-width:0;width:100%}
@@ -163,7 +168,7 @@ body.sheet-open{overflow:hidden}
       <p>بيطلع شريط أحمر فوق الموقع، والسعر القديم مشطوب. وبيوقف لحاله بتاريخ النهاية.</p>
       <label class="switch"><input type="checkbox" id="saleOn"> تشغيل الخصم</label>
       <div class="grid2" style="margin-top:10px">
-        <label class="f">نسبة الخصم ٪<input type="number" id="salePct" min="1" max="90" inputmode="numeric"></label>
+        <label class="f">نسبة الخصم ٪<input type="text" inputmode="numeric" id="salePct" min="1" max="90" ></label>
         <label class="f">بيبلّش من<input type="datetime-local" id="saleStart"></label>
         <label class="f">بيخلص بـ<input type="datetime-local" id="saleEnd"></label>
       </div>
@@ -197,6 +202,8 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const pic=s=>!s?"":s.startsWith("/")?s:"/"+s;
 const ar=n=>Number(n).toLocaleString("ar-EG");
+/* numbers typed with Arabic or Persian digits, or an Arabic decimal comma, count too */
+const n=v=>{const t=String(v??"").trim().replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g,d=>"۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[٫,]/g,".").replace(/[^\d.]/g,"");return t===""?NaN:+t};
 let DATA=null, saved="", base=null, catF="all";
 
 function toast(t,ms=2600){const e=$("#toast");e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,ms)}
@@ -240,17 +247,15 @@ function priceText(p){
   const a=Math.min(...pr),b=Math.max(...pr);
   return a===b?ar(a)+" ₪":"من "+ar(a)+" لـ "+ar(b)+" ₪";
 }
-/* stock: no number = not counted (always available); 0 = sold out */
+/* stock: qty 0 = sold out; anything else = available */
 function stock(p){
   if(p.variants){
-    const n=p.variants.filter(v=>v.qty===0).length, counted=p.variants.filter(v=>typeof v.qty==="number");
-    if(n&&n===p.variants.length)return{badge:'<span class="badge out">مخلص</span>',text:"كل المقاسات مخلصة"};
-    if(n)return{badge:'<span class="badge low">'+ar(n)+' مقاسات مخلصة</span>',text:"في مقاسات مخلصة"};
-    if(counted.length)return{badge:"",text:"الكمية: "+ar(counted.reduce((a,v)=>a+v.qty,0))};
+    const n=p.variants.filter(v=>v.qty===0).length;
+    if(n&&n===p.variants.length)return{badge:'<span class="badge out">مخلص</span>',text:""};
+    if(n)return{badge:'<span class="badge low">'+(n===1?"مقاس مخلص":ar(n)+" مقاسات مخلصة")+'</span>',text:""};
     return{badge:"",text:""};
   }
-  if(p.qty===0)return{badge:'<span class="badge out">مخلص</span>',text:"مخلص"};
-  if(typeof p.qty==="number")return{badge:"",text:"الكمية: "+ar(p.qty)};
+  if(p.qty===0)return{badge:'<span class="badge out">مخلص</span>',text:""};
   return{badge:"",text:""};
 }
 function renderCats(){
@@ -324,19 +329,19 @@ function drawEditor(){
   <div class="sec">
     <h3>السعر</h3>
     <div class="seg" role="group" aria-label="نوع السعر"><button type="button" data-mode="one" aria-pressed="${p._mode==="one"}">سعر واحد</button><button type="button" data-mode="var" aria-pressed="${p._mode==="var"}">حسب المقاس أو النوع</button></div>
-    ${p._mode==="one"?`<div class="grid2"><label class="f">السعر بالشيكل<input type="number" id="e-price" min="0" inputmode="decimal" value="${p.price??""}"></label>
-      <label class="f">الكمية بالمخزن<input type="number" id="e-qty" min="0" step="1" inputmode="numeric" value="${p.qty??""}" placeholder="فاضي = متوفر"></label></div>
-      <p class="hint" style="margin:0">اكتب <b>٠</b> إذا خلص، وبيطلع للزبون «نفذت الكمية». إذا تركتها فاضية بيضل «متوفر» دايماً. الرقم نفسه ما بيشوفه الزبون.</p>`:`
-      <div class="vrow vhead" aria-hidden="true"><span>المقاس / النوع</span><span>السعر</span><span>الكمية</span><span></span></div>
-      <div id="vars" style="display:grid;gap:6px">${(p.variants||[]).map((v,k)=>`<div class="vrow${v.qty===0?" is-out":""}" data-k="${k}"><input data-v="label" value="${esc(v.label)}" placeholder="مثلاً: عرض ٣٠ سم" aria-label="المقاس"><input data-v="price" type="number" min="0" inputmode="decimal" value="${v.price??""}" placeholder="السعر" aria-label="السعر"><input data-v="qty" type="number" min="0" step="1" inputmode="numeric" value="${v.qty??""}" placeholder="–" aria-label="الكمية"><button class="icon" type="button" data-vx="${k}" aria-label="احذف">✕</button></div>`).join("")}</div>
-      <p class="hint" style="margin:0">الكمية لكل مقاس لحاله: <b>٠</b> = خلص (بيطلع للزبون «نفذت الكمية» على هالمقاس). فاضية = متوفر دايماً.</p>
+    ${p._mode==="one"?`<div class="grid2"><label class="f">السعر بالشيكل<input type="text" inputmode="decimal" id="e-price" min="0"  value="${p.price??""}"></label>
+      <div class="f"><span>بالمخزن</span><div class="seg stock" role="group" aria-label="التوفر"><button type="button" data-stock="in" aria-pressed="${p.qty!==0}">✓ متوفر</button><button type="button" data-stock="out" aria-pressed="${p.qty===0}">✕ مخلص</button></div></div></div>
+      <p class="hint" style="margin:0">إذا اخترت «مخلص» بيطلع للزبون «نفذت الكمية» وزر «اسأل متى بيتوفر».</p>`:`
+      <div class="vrow vhead" aria-hidden="true"><span>المقاس / النوع</span><span>السعر</span><span>بالمخزن</span><span></span></div>
+      <div id="vars" style="display:grid;gap:6px">${(p.variants||[]).map((v,k)=>`<div class="vrow${v.qty===0?" is-out":""}" data-k="${k}"><input data-v="label" value="${esc(v.label)}" placeholder="مثلاً: عرض ٣٠ سم" aria-label="المقاس"><input data-v="price" type="text" inputmode="decimal" min="0"  value="${v.price??""}" placeholder="السعر" aria-label="السعر"><button type="button" class="stk" data-vs="${k}" aria-pressed="${v.qty===0}" aria-label="${esc(v.label)}: ${v.qty===0?"مخلص":"متوفر"}">${v.qty===0?"✕ مخلص":"✓ متوفر"}</button><button class="icon" type="button" data-vx="${k}" aria-label="احذف">✕</button></div>`).join("")}</div>
+      <p class="hint" style="margin:0">اكبس «متوفر» عشان تحوّله لـ«مخلص» والعكس. المقاس المخلص بيطلع للزبون «نفذت الكمية».</p>
       <div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm" type="button" id="addVar">＋ مقاس</button><button class="btn sm ghost" type="button" id="stepVar">＋ مقاسات متتالية…</button></div>
       <div id="stepBox" hidden class="grid2" style="border:1px dashed var(--line);border-radius:10px;padding:10px">
-        <label class="f">أول عرض (سم)<input type="number" id="s-from" value="30"></label>
-        <label class="f">آخر عرض (سم)<input type="number" id="s-to" value="60"></label>
-        <label class="f">كل كم سم<input type="number" id="s-step" value="5"></label>
-        <label class="f">أول سعر<input type="number" id="s-p0" value=""></label>
-        <label class="f">زيادة السعر كل مقاس<input type="number" id="s-pd" value="5"></label>
+        <label class="f">أول عرض (سم)<input type="text" inputmode="decimal" id="s-from" value="30"></label>
+        <label class="f">آخر عرض (سم)<input type="text" inputmode="decimal" id="s-to" value="60"></label>
+        <label class="f">كل كم سم<input type="text" inputmode="decimal" id="s-step" value="5"></label>
+        <label class="f">أول سعر<input type="text" inputmode="decimal" id="s-p0" value=""></label>
+        <label class="f">زيادة السعر كل مقاس<input type="text" inputmode="decimal" id="s-pd" value="5"></label>
         <button class="btn sm ok" type="button" id="s-make" style="align-self:end">اعمل المقاسات</button>
       </div>`}
   </div>
@@ -361,9 +366,8 @@ function readEditor(){
   const p=ED;if(!p)return;
   p.name=$("#e-name").value.trim();p.cat=$("#e-cat").value;
   if($("#e-hidden").checked)p.hidden=true;else delete p.hidden;
-  const q=x=>x===""?undefined:Math.max(0,Math.floor(+x));
-  if(p._mode==="one"){const v=$("#e-price").value;p.price=v===""?undefined:+v;p.qty=q($("#e-qty").value);if(p.qty===undefined)delete p.qty}
-  else document.querySelectorAll("#vars .vrow[data-k]").forEach(r=>{const v=p.variants[+r.dataset.k];v.label=r.querySelector('[data-v=label]').value.trim();const pr=r.querySelector('[data-v=price]').value;v.price=pr===""?0:+pr;v.qty=q(r.querySelector('[data-v=qty]').value);if(v.qty===undefined)delete v.qty});
+  if(p._mode==="one"){const v=$("#e-price").value;p.price=v===""?undefined:n(v)}
+  else document.querySelectorAll("#vars .vrow[data-k]").forEach(r=>{const v=p.variants[+r.dataset.k];v.label=r.querySelector('[data-v=label]').value.trim();const pr=r.querySelector('[data-v=price]').value;v.price=pr===""?0:n(pr)});
   p.specs=$("#e-specs").value.split("\n").map(s=>s.trim()).filter(Boolean);
   document.querySelectorAll("[data-cl]").forEach(i=>{p.colors[+i.dataset.cl].label=i.value.trim()});
 }
@@ -373,9 +377,13 @@ $("#ed").addEventListener("click",e=>{
   const t=e.target;
   const mode=t.closest("[data-mode]");
   if(mode){readEditor();ED._mode=mode.dataset.mode;if(ED._mode==="var"&&!ED.variants?.length)ED.variants=[{label:"",price:ED.price??0}];drawEditor();return}
+  const sb=t.closest("[data-stock]");
+  if(sb){readEditor();if(sb.dataset.stock==="out")ED.qty=0;else delete ED.qty;drawEditor();return}
+  const vs=t.closest("[data-vs]");
+  if(vs){readEditor();const v=ED.variants[+vs.dataset.vs];if(v.qty===0)delete v.qty;else v.qty=0;drawEditor();return}
   if(t.id==="addVar"){readEditor();(ED.variants=ED.variants||[]).push({label:"",price:0});drawEditor();return}
   if(t.id==="stepVar"){$("#stepBox").hidden=!$("#stepBox").hidden;return}
-  if(t.id==="s-make"){readEditor();const f=+$("#s-from").value,to=+$("#s-to").value,st=+$("#s-step").value||5,p0=+$("#s-p0").value,pd=+$("#s-pd").value||0;
+  if(t.id==="s-make"){readEditor();const f=n($("#s-from").value),to=n($("#s-to").value),st=n($("#s-step").value)||5,p0=n($("#s-p0").value),pd=n($("#s-pd").value)||0;
     if(!(to>=f)||!p0){$("#edErr").textContent="عبّي أول عرض وآخر عرض وأول سعر.";return}
     const v=[];for(let w=f,k=0;w<=to&&v.length<40;w+=st,k++)v.push({label:"عرض "+ar(w)+" سم",price:p0+k*pd});ED.variants=v;$("#edErr").textContent="";drawEditor();return}
   const vx=t.closest("[data-vx]");if(vx){readEditor();ED.variants.splice(+vx.dataset.vx,1);drawEditor();return}
@@ -417,6 +425,8 @@ function editorDone(){
   readEditor();const p=ED;const err=m=>{$("#edErr").textContent=m};
   if(uploading)return err("استنّى، لسا في صور عم بترفع.");
   if(!p.name)return err("اكتب اسم المنتج.");
+  if(p._mode==="one"&&Number.isNaN(p.price))return err("السعر لازم يكون رقم.");
+  if(p._mode==="var"&&(p.variants||[]).some(v=>v.label&&Number.isNaN(v.price)))return err("في سعر مقاس مش رقم.");
   if(!p.imgs.length&&!(p.colors&&p.colors[0]&&p.colors[0].imgs.length))return err("ضيف صورة وحدة على الأقل.");
   if(p._mode==="one"){delete p.variants}else{
     p.variants=(p.variants||[]).filter(v=>v.label);if(!p.variants.length)return err("ضيف مقاس واحد على الأقل، أو اختار «سعر واحد».");delete p.price;delete p.qty}
@@ -448,7 +458,7 @@ function renderSettings(){
 }
 $("#tab-settings").addEventListener("input",()=>{
   const s=DATA.settings;s.showPrices=$("#showPrices").checked;
-  s.sale.on=$("#saleOn").checked;s.sale.pct=+$("#salePct").value||0;s.sale.start=fromLocal($("#saleStart").value);s.sale.end=fromLocal($("#saleEnd").value);s.sale.endLabel=endLabel(s.sale.end);
+  s.sale.on=$("#saleOn").checked;s.sale.pct=n($("#salePct").value)||0;s.sale.start=fromLocal($("#saleStart").value);s.sale.end=fromLocal($("#saleEnd").value);s.sale.endLabel=endLabel(s.sale.end);
   markDirty();
 });
 
