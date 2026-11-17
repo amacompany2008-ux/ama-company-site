@@ -33,3 +33,18 @@
 - **الآراء الموجودة حقيقية فقط** — ما بنكتب آراء من عندنا.
 - **الدومين:** لسا ما انشرى (GoDaddy). لما يتربط: غيّر `SITE` بالمصدر وبـ build.py.
 - **روابط خرائط جوجل للفرعين:** لسا ما وصلت.
+
+## لوحة التحكم (فرع `admin`)
+- الصفحة: `/admin/` (عربي). الدخول محمي بـ Cloudflare Access (كود على إيميل الشركة).
+- المنتجات والأقسام والإعدادات محفوظة كمستند JSON واحد بـ D1 (جدول `doc`، مفتاح `catalog`)، وكل حفظ بينسخ بجدول `history` (آخر ٦٠).
+- قبل أول حفظ، الموقع والـ API بيستعملوا `data/seed.json` (بيطلعه build.py من `_source/ama-site.html`).
+- الصفحة الرئيسية بتجيب `/api/catalog` قبل ما ترسم، وإذا فشل بتستعمل النسخة المضمّنة جوّاها.
+- الصور المرفوعة من اللوحة بـ R2، وبتنخدم من `/img/u/...`.
+- روابط المنتجات `/p/<id>/` (معاينة الواتساب) صارت Function بتقرأ من نفس البيانات.
+- الكود: `functions/` (الـ API) و `lib/store.js` (القراءة والحفظ والتحقق من الدخول) و `admin/index.html`.
+- **إعدادات Cloudflare Pages المطلوبة** (Production و Preview):
+  - Binding D1 باسم `DB`
+  - Binding R2 باسم `IMAGES`
+  - متغيرات: `ACCESS_TEAM_DOMAIN` (مثلاً `xxx.cloudflareaccess.com`) و `ACCESS_AUD` (Application Audience من تطبيق Access)، واختياري `ADMIN_EMAILS`
+  - تطبيق Access يحمي `/admin` و `/api/admin` (Policy: الإيميل المسموح، Login: One-time PIN)
+- بعد ما تشتغل اللوحة، تعديل المنتجات بيصير منها، مش من `_source`. `_source` بيضل نسخة احتياطية مضمّنة.

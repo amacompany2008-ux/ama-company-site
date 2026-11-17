@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>لوحة التحكم | ama.company.ps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: one work column — sticky top bar with the save action, tabs, then lists; editing happens in a full-screen sheet.
+   Colours follow the site: slate blue with a copper accent. */
+:root{
+  --bg:#f3f6f7; --card:#ffffff; --fg:#1f2d33; --muted:#5b707a; --line:#d5e0e4;
+  --ink:#31424b; --accent:#4c636d; --accent-2:#819aa2; --copper:#a9744c;
+  --ok:#1f8f4e; --warn:#b7791f; --bad:#c0392b; --soft:#e6eef1;
+  --font:"Cairo",Tahoma,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;line-height:1.6;padding-bottom:env(safe-area-inset-bottom,0px)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--copper);outline-offset:2px}
+[hidden]{display:none!important}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--ink);z-index:30}
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--ink);color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+.top .wrap{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.top h1{margin:0;font-size:18px;font-weight:800;flex:1;min-width:0}
+.top h1 small{display:block;font-size:12px;font-weight:400;opacity:.75}
+.top a{color:#e3ecef;font-size:14px}
+.savebar{display:flex;align-items:center;gap:10px}
+@media (max-width:640px){.top h1{flex:1 1 100%}.top .wrap{row-gap:6px}.savebar{margin-inline-start:auto}}
+.dirty{font-size:13px;color:#ffd9a8}
+.btn{border:0;border-radius:10px;padding:9px 16px;font-weight:700;cursor:pointer;background:var(--soft);color:var(--ink);display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.btn.primary{background:var(--copper);color:#fff}
+.btn.ok{background:var(--ok);color:#fff}
+.btn.danger{background:#fbe9e7;color:var(--bad)}
+.btn.ghost{background:transparent;border:1px solid var(--line)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.sm{padding:5px 10px;font-size:13px;border-radius:8px}
+
+.tabs{display:flex;gap:6px;padding-block:14px 6px;overflow-x:auto}
+.tab{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 16px;font-weight:700;cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+
+.note{border-radius:12px;padding:12px 14px;margin-block:10px;font-size:14px;background:#fff6e5;border:1px solid #f1d29b;color:#6b4a12}
+.note.bad{background:#fdeceb;border-color:#f3b9b3;color:#7d241b}
+.note.good{background:#e8f6ee;border-color:#a9dbbd;color:#14532d}
+
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-block:8px 12px}
+.bar input[type=search]{flex:1 1 220px;min-width:0;border:1px solid var(--line);border-radius:10px;padding:9px 12px;background:var(--card)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+.list{display:grid;gap:8px}
+.row{display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px}
+.row img{width:64px;height:64px;object-fit:cover;border-radius:8px;background:var(--soft)}
+.row .t{min-width:0}
+.row b{display:block;font-size:15px;line-height:1.4;overflow-wrap:anywhere}
+.row .m{font-size:12.5px;color:var(--muted)}
+.row.off img,.row.off .t{opacity:.5}
+.badge{display:inline-block;font-size:11px;font-weight:700;border-radius:999px;padding:1px 8px;background:var(--soft);color:var(--ink);margin-inline-start:6px}
+.badge.hid{background:#fdeceb;color:var(--bad)}
+.acts{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.icon{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--card);cursor:pointer;display:grid;place-items:center;font-size:15px}
+@media (max-width:640px){
+  .row{grid-template-columns:56px 1fr}
+  .row img{width:56px;height:56px}
+  .acts{grid-column:1/-1;justify-content:flex-start}
+}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-block:10px}
+.card h2{margin:0 0 6px;font-size:17px}
+.card p{margin:0 0 10px;color:var(--muted);font-size:14px}
+.switch{display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:700}
+.switch input{width:20px;height:20px;accent-color:var(--copper)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+label.f{display:grid;gap:4px;font-size:13px;font-weight:700;color:var(--ink)}
+label.f input,label.f select,label.f textarea{border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:#fff;font-weight:400;font-size:15px;width:100%;min-width:0}
+.hint{font-size:12px;color:var(--muted);font-weight:400}
+
+/* editor sheet */
+body.sheet-open{overflow:hidden}
+.sheet{position:fixed;inset:0;z-index:40;background:var(--bg);overflow-y:auto;padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}
+.sheet-top{position:sticky;top:0;z-index:2;background:var(--ink);color:#fff;padding-top:env(safe-area-inset-top,0px)}
+.sheet-top .wrap{display:flex;align-items:center;gap:10px;padding-block:10px}
+.sheet-top b{flex:1;font-size:17px}
+.sheet .sec{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-block:12px;display:grid;gap:10px}
+.sec h3{margin:0;font-size:15px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:#fff;padding:7px 14px;cursor:pointer;font-weight:700}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.vrow{display:grid;grid-template-columns:1fr 110px 36px;gap:6px;align-items:center}
+.vrow input{border:1px solid var(--line);border-radius:8px;padding:7px 9px;min-width:0;width:100%}
+.imgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.im{position:relative;border-radius:10px;overflow:hidden;background:var(--soft);aspect-ratio:1}
+.im img{width:100%;height:100%;object-fit:cover;display:block}
+.im .main{position:absolute;top:4px;right:4px;font-size:10px;font-weight:800;background:var(--copper);color:#fff;border-radius:999px;padding:0 7px}
+.im .ctl{position:absolute;inset:auto 0 0 0;display:flex;justify-content:space-between;background:linear-gradient(transparent,rgba(0,0,0,.55));padding:14px 4px 4px}
+.im .ctl button{width:26px;height:26px;border:0;border-radius:6px;background:rgba(255,255,255,.9);cursor:pointer;font-size:13px;line-height:1}
+.add{border:2px dashed var(--line);border-radius:10px;display:grid;place-items:center;aspect-ratio:1;cursor:pointer;color:var(--muted);font-size:13px;text-align:center;padding:6px;background:#fff}
+.add input{display:none}
+.up{font-size:13px;color:var(--warn)}
+.colorrow{border:1px solid var(--line);border-radius:12px;padding:10px;display:grid;gap:8px}
+.sheet-foot{position:fixed;inset:auto 0 0 0;z-index:41;background:#fff;border-top:1px solid var(--line);padding-block:10px calc(10px + env(safe-area-inset-bottom,0px))}
+.sheet-foot .wrap{display:flex;gap:8px;justify-content:flex-start;flex-wrap:wrap}
+.err{color:var(--bad);font-size:13px;font-weight:700}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:12px;padding:10px 18px;z-index:60;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.25);max-width:90vw;text-align:center}
+.hist{display:grid;gap:6px}
+.hrow{display:flex;gap:10px;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px;flex-wrap:wrap}
+.hrow span{font-size:13px;color:var(--muted)}
+.inline-confirm{display:inline-flex;gap:4px;align-items:center;font-size:13px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <h1>لوحة التحكم<small id="who">ama.company.ps</small></h1>
+    <a href="/" target="_blank" rel="noopener">عرض الموقع ↗</a>
+    <div class="savebar">
+      <span class="dirty" id="dirty" hidden>في تعديلات ما انحفظت</span>
+      <button class="btn ghost sm" id="discard" type="button" hidden style="color:#fff;border-color:rgba(255,255,255,.4)">تراجع</button>
+      <button class="btn primary" id="save" type="button" disabled>حفظ ونشر</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="notes"></div>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="products" type="button">المنتجات</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="settings" type="button">الأسعار والخصم</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="history" type="button">النسخ السابقة</button>
+  </div>
+
+  <section id="tab-products">
+    <div class="bar">
+      <input type="search" id="q" placeholder="ابحث عن منتج…" aria-label="ابحث عن منتج">
+      <button class="btn ok" id="new" type="button">＋ منتج جديد</button>
+    </div>
+    <div class="chips" id="cats"></div>
+    <div class="list" id="list" style="margin-top:12px"><div class="empty">بحمّل المنتجات…</div></div>
+  </section>
+
+  <section id="tab-settings" hidden>
+    <div class="card">
+      <h2>الأسعار</h2>
+      <p>إذا طفّيتها، بيطلع مكان السعر «اسأل عن السعر» على كل المنتجات.</p>
+      <label class="switch"><input type="checkbox" id="showPrices"> إظهار الأسعار على الموقع</label>
+    </div>
+    <div class="card">
+      <h2>خصم على كل المنتجات</h2>
+      <p>بيطلع شريط أحمر فوق الموقع، والسعر القديم مشطوب. وبيوقف لحاله بتاريخ النهاية.</p>
+      <label class="switch"><input type="checkbox" id="saleOn"> تشغيل الخصم</label>
+      <div class="grid2" style="margin-top:10px">
+        <label class="f">نسبة الخصم ٪<input type="number" id="salePct" min="1" max="90" inputmode="numeric"></label>
+        <label class="f">بيبلّش من<input type="datetime-local" id="saleStart"></label>
+        <label class="f">بيخلص بـ<input type="datetime-local" id="saleEnd"></label>
+      </div>
+      <p class="hint" style="margin-top:8px">الأوقات بتوقيت فلسطين.</p>
+    </div>
+  </section>
+
+  <section id="tab-history" hidden>
+    <div class="card">
+      <h2>النسخ السابقة</h2>
+      <p>كل مرة بتكبس «حفظ ونشر» بتنحفظ نسخة. إذا صار غلط، رجّع نسخة قديمة.</p>
+      <div class="hist" id="hist"><div class="empty">بحمّل…</div></div>
+    </div>
+  </section>
+</main>
+
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="edTitle">
+  <div class="sheet-top"><div class="wrap"><b id="edTitle">تعديل منتج</b><button class="btn ghost sm" id="edClose" type="button" style="color:#fff;border-color:rgba(255,255,255,.4)">✕ سكّر</button></div></div>
+  <div class="wrap" id="ed"></div>
+</div>
+<div class="sheet-foot" id="edFoot" hidden><div class="wrap">
+  <button class="btn ok" id="edDone" type="button">✓ تم</button>
+  <button class="btn ghost" id="edCancel" type="button">إلغاء</button>
+  <span class="err" id="edErr"></span>
+</div></div>
+
+<div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pic=s=>!s?"":s.startsWith("/")?s:"/"+s;
+const ar=n=>Number(n).toLocaleString("ar-EG");
+let DATA=null, saved="", base=null, catF="all";
+
+function toast(t,ms=2600){const e=$("#toast");e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,ms)}
+function note(html,kind){$("#notes").insertAdjacentHTML("beforeend",`<div class="note ${kind||""}">${html}</div>`)}
+
+async function api(path,opt={}){
+  const r=await fetch(path,{credentials:"same-origin",cache:"no-store",...opt});
+  let d=null;try{d=await r.json()}catch{}
+  if(!r.ok){const e=new Error((d&&d.message)||("خطأ "+r.status));e.status=r.status;e.code=d&&d.error;throw e}
+  return d;
+}
+
+/* ---------- load ---------- */
+async function load(){
+  $("#notes").innerHTML="";
+  try{
+    const d=await api("/api/admin/catalog");
+    DATA={cats:d.cats,products:d.products,settings:d.settings};
+    base=d.savedAt; saved=JSON.stringify(DATA);
+    $("#who").textContent=d.user||"ama.company.ps";
+    if(!d.storage.db)note("<b>قاعدة البيانات مش مربوطة لسا.</b> بتقدر تشوف المنتجات، بس الحفظ ما رح يشتغل لحد ما نربط D1 بالموقع.","bad");
+    if(!d.storage.images)note("<b>مخزن الصور (R2) مش مربوط لسا.</b> رفع صور جديدة ما رح يشتغل لحد ما نربطه.");
+    if(d.source!=="db"&&d.storage.db)note("هاي المنتجات الأصلية تبعت الموقع. أول ما تكبس «حفظ ونشر» بتصير محفوظة باللوحة.","good");
+    renderAll();
+  }catch(e){
+    $("#list").innerHTML="";
+    if(e.status===401)note("<b>لازم تسجّل دخول.</b> حدّث الصفحة، ودخّل الإيميل، واكتب الكود اللي بيوصلك.","bad");
+    else note("<b>ما قدرت أحمّل اللوحة.</b> "+esc(e.message),"bad");
+  }
+}
+function isDirty(){return DATA&&JSON.stringify(DATA)!==saved}
+function markDirty(){const d=isDirty();$("#dirty").hidden=!d;$("#discard").hidden=!d;$("#save").disabled=!d}
+addEventListener("beforeunload",e=>{if(isDirty()){e.preventDefault();e.returnValue=""}});
+
+function renderAll(){renderCats();renderList();renderSettings();markDirty()}
+
+/* ---------- products list ---------- */
+function priceText(p){
+  const pr=(p.variants?p.variants.map(v=>v.price):[p.price]).filter(x=>typeof x==="number");
+  if(!pr.length)return "بدون سعر";
+  const a=Math.min(...pr),b=Math.max(...pr);
+  return a===b?ar(a)+" ₪":"من "+ar(a)+" لـ "+ar(b)+" ₪";
+}
+function renderCats(){
+  const c=[{id:"all",name:"الكل"},...DATA.cats];
+  $("#cats").innerHTML=c.map(x=>{const n=x.id==="all"?DATA.products.length:DATA.products.filter(p=>p.cat===x.id).length;return `<button class="chip" type="button" data-c="${esc(x.id)}" aria-pressed="${x.id===catF}">${esc(x.name)} (${ar(n)})</button>`}).join("");
+}
+function renderList(){
+  const q=$("#q").value.trim();
+  const rows=DATA.products.map((p,i)=>({p,i})).filter(({p})=>(catF==="all"||p.cat===catF)&&(!q||p.name.includes(q)));
+  if(!rows.length){$("#list").innerHTML=`<div class="empty">${q?"ما في منتج بهالاسم.":"ما في منتجات بهالقسم لسا."}</div>`;return}
+  $("#list").innerHTML=rows.map(({p,i})=>{
+    const cat=DATA.cats.find(c=>c.id===p.cat);
+    return `<div class="row${p.hidden?" off":""}" data-i="${i}">
+      <img src="${esc(pic(p.imgs[0]))}" alt="" loading="lazy">
+      <div class="t"><b>${esc(p.name)}${p.hidden?'<span class="badge hid">مخفي</span>':""}</b>
+        <div class="m">${esc(cat?cat.name:"")}، ${priceText(p)}${p.variants?"، "+ar(p.variants.length)+" خيارات":""}، ${ar(p.imgs.length)} صور</div></div>
+      <div class="acts">
+        <button class="btn sm" data-a="edit" type="button">تعديل</button>
+        <button class="icon" data-a="up" type="button" title="لفوق" aria-label="انقل لفوق">↑</button>
+        <button class="icon" data-a="down" type="button" title="لتحت" aria-label="انقل لتحت">↓</button>
+        <button class="icon" data-a="hide" type="button" title="${p.hidden?"أظهر بالموقع":"خبّي من الموقع"}" aria-label="${p.hidden?"أظهر":"خبّي"}">${p.hidden?"👁":"🙈"}</button>
+        <button class="icon" data-a="del" type="button" title="احذف" aria-label="احذف">🗑</button>
+      </div></div>`;
+  }).join("");
+}
+$("#cats").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;catF=b.dataset.c;renderCats();renderList()});
+$("#q").addEventListener("input",renderList);
+$("#list").addEventListener("click",e=>{
+  const b=e.target.closest("[data-a]");if(!b)return;
+  const row=b.closest(".row"),i=+row.dataset.i,P=DATA.products,p=P[i];
+  const a=b.dataset.a;
+  if(a==="edit")openEditor(i);
+  if(a==="hide"){p.hidden=!p.hidden;if(!p.hidden)delete p.hidden;toast(p.hidden?"انخفى من الموقع (بعد الحفظ)":"رجع يبيّن بالموقع (بعد الحفظ)")}
+  if(a==="up"||a==="down"){
+    const same=P.map((x,k)=>k).filter(k=>catF==="all"||P[k].cat===catF);
+    const pos=same.indexOf(i),to=same[pos+(a==="up"?-1:1)];
+    if(to===undefined)return;[P[i],P[to]]=[P[to],P[i]];
+  }
+  if(a==="del"){
+    if(b.dataset.sure!=="1"){b.dataset.sure="1";b.textContent="متأكد؟";b.style.width="auto";b.style.padding="0 8px";b.style.color="var(--bad)";setTimeout(()=>{if(b.isConnected){b.dataset.sure="";b.textContent="🗑";b.style.cssText=""}},3500);return}
+    P.splice(i,1);toast("انحذف «"+p.name+"». بتقدر تكبس «تراجع» فوق إذا غلط.");
+  }
+  renderCats();renderList();markDirty();
+});
+
+/* ---------- editor ---------- */
+let ED=null, edIndex=-1, uploading=0;
+const blank=()=>({id:"",name:"",cat:(catF!=="all"?catF:DATA.cats[0]?.id)||"",price:undefined,specs:[],imgs:[]});
+function openEditor(i){
+  edIndex=i; ED=JSON.parse(JSON.stringify(i<0?blank():DATA.products[i]));
+  ED._mode=ED.variants?"var":"one";
+  $("#edTitle").textContent=i<0?"منتج جديد":"تعديل: "+ED.name;
+  $("#edErr").textContent="";
+  drawEditor();
+  $("#sheet").hidden=false;$("#edFoot").hidden=false;document.body.classList.add("sheet-open");$("#sheet").scrollTop=0;
+}
+function closeEditor(){$("#sheet").hidden=true;$("#edFoot").hidden=true;document.body.classList.remove("sheet-open");ED=null}
+function imgGrid(list,key){
+  return `<div class="imgs" data-list="${key}">${list.map((s,k)=>`<div class="im"><img src="${esc(pic(s))}" alt="">${k===0&&key==="imgs"?'<span class="main">الرئيسية</span>':""}
+    <div class="ctl"><button type="button" data-im="r" data-k="${k}" aria-label="قدّم">→</button><button type="button" data-im="x" data-k="${k}" aria-label="احذف الصورة">✕</button><button type="button" data-im="l" data-k="${k}" aria-label="أخّر">←</button></div></div>`).join("")}
+    <label class="add">＋ أضف صور<input type="file" accept="image/*" multiple data-up="${key}"></label></div>`;
+}
+function drawEditor(){
+  const p=ED;
+  $("#ed").innerHTML=`
+  <div class="sec">
+    <label class="f">اسم المنتج<input id="e-name" value="${esc(p.name)}" maxlength="140" placeholder="مثلاً: سلة ستانلس هايدروليك"></label>
+    <label class="f">القسم<select id="e-cat">${DATA.cats.map(c=>`<option value="${esc(c.id)}"${c.id===p.cat?" selected":""}>${esc(c.name)}</option>`).join("")}</select></label>
+    <label class="switch" style="font-weight:600"><input type="checkbox" id="e-hidden"${p.hidden?" checked":""}> مخفي من الموقع</label>
+  </div>
+  <div class="sec">
+    <h3>السعر</h3>
+    <div class="seg" role="group" aria-label="نوع السعر"><button type="button" data-mode="one" aria-pressed="${p._mode==="one"}">سعر واحد</button><button type="button" data-mode="var" aria-pressed="${p._mode==="var"}">حسب المقاس أو النوع</button></div>
+    ${p._mode==="one"?`<label class="f">السعر بالشيكل<input type="number" id="e-price" min="0" inputmode="decimal" value="${p.price??""}"></label>`:`
+      <div id="vars" style="display:grid;gap:6px">${(p.variants||[]).map((v,k)=>`<div class="vrow" data-k="${k}"><input data-v="label" value="${esc(v.label)}" placeholder="مثلاً: عرض ٣٠ سم"><input data-v="price" type="number" min="0" inputmode="decimal" value="${v.price??""}" placeholder="السعر"><button class="icon" type="button" data-vx="${k}" aria-label="احذف">✕</button></div>`).join("")}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm" type="button" id="addVar">＋ مقاس</button><button class="btn sm ghost" type="button" id="stepVar">＋ مقاسات متتالية…</button></div>
+      <div id="stepBox" hidden class="grid2" style="border:1px dashed var(--line);border-radius:10px;padding:10px">
+        <label class="f">أول عرض (سم)<input type="number" id="s-from" value="30"></label>
+        <label class="f">آخر عرض (سم)<input type="number" id="s-to" value="60"></label>
+        <label class="f">كل كم سم<input type="number" id="s-step" value="5"></label>
+        <label class="f">أول سعر<input type="number" id="s-p0" value=""></label>
+        <label class="f">زيادة السعر كل مقاس<input type="number" id="s-pd" value="5"></label>
+        <button class="btn sm ok" type="button" id="s-make" style="align-self:end">اعمل المقاسات</button>
+      </div>`}
+  </div>
+  <div class="sec">
+    <h3>المواصفات <span class="hint">(سطر لكل وحدة، أول اثنين بيطلعوا على البطاقة)</span></h3>
+    <textarea id="e-specs" rows="4" style="border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%" placeholder="سحب&#10;٦٠ × ٤٥ سم">${esc((p.specs||[]).join("\n"))}</textarea>
+  </div>
+  <div class="sec">
+    <h3>الصور <span class="hint">(أول صورة هي الرئيسية)</span></h3>
+    ${imgGrid(p.imgs||[],"imgs")}
+    <span class="up" id="upMsg"></span>
+  </div>
+  <div class="sec">
+    <h3>ألوان <span class="hint">(اختياري: إذا المنتج إله أكثر من لون وكل لون إله صوره)</span></h3>
+    <div id="colors" style="display:grid;gap:8px">${(p.colors||[]).map((c,k)=>`<div class="colorrow" data-ck="${k}">
+      <div style="display:flex;gap:6px"><input data-cl="${k}" value="${esc(c.label)}" placeholder="اسم اللون" style="flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 9px;min-width:0"><button class="icon" type="button" data-cx="${k}" aria-label="احذف اللون">✕</button></div>
+      ${imgGrid(c.imgs,"c"+k)}</div>`).join("")}</div>
+    <button class="btn sm" type="button" id="addColor">＋ لون</button>
+  </div>`;
+}
+function readEditor(){
+  const p=ED;if(!p)return;
+  p.name=$("#e-name").value.trim();p.cat=$("#e-cat").value;
+  if($("#e-hidden").checked)p.hidden=true;else delete p.hidden;
+  if(p._mode==="one"){const v=$("#e-price").value;p.price=v===""?undefined:+v}
+  else document.querySelectorAll("#vars .vrow").forEach(r=>{const v=p.variants[+r.dataset.k];v.label=r.querySelector('[data-v=label]').value.trim();const pr=r.querySelector('[data-v=price]').value;v.price=pr===""?0:+pr});
+  p.specs=$("#e-specs").value.split("\n").map(s=>s.trim()).filter(Boolean);
+  document.querySelectorAll("[data-cl]").forEach(i=>{p.colors[+i.dataset.cl].label=i.value.trim()});
+}
+function listOf(key){return key==="imgs"?ED.imgs:ED.colors[+key.slice(1)].imgs}
+
+$("#ed").addEventListener("click",e=>{
+  const t=e.target;
+  const mode=t.closest("[data-mode]");
+  if(mode){readEditor();ED._mode=mode.dataset.mode;if(ED._mode==="var"&&!ED.variants?.length)ED.variants=[{label:"",price:ED.price??0}];drawEditor();return}
+  if(t.id==="addVar"){readEditor();(ED.variants=ED.variants||[]).push({label:"",price:0});drawEditor();return}
+  if(t.id==="stepVar"){$("#stepBox").hidden=!$("#stepBox").hidden;return}
+  if(t.id==="s-make"){readEditor();const f=+$("#s-from").value,to=+$("#s-to").value,st=+$("#s-step").value||5,p0=+$("#s-p0").value,pd=+$("#s-pd").value||0;
+    if(!(to>=f)||!p0){$("#edErr").textContent="عبّي أول عرض وآخر عرض وأول سعر.";return}
+    const v=[];for(let w=f,k=0;w<=to&&v.length<40;w+=st,k++)v.push({label:"عرض "+ar(w)+" سم",price:p0+k*pd});ED.variants=v;$("#edErr").textContent="";drawEditor();return}
+  const vx=t.closest("[data-vx]");if(vx){readEditor();ED.variants.splice(+vx.dataset.vx,1);drawEditor();return}
+  if(t.id==="addColor"){readEditor();(ED.colors=ED.colors||[]).push({label:"",imgs:[]});drawEditor();return}
+  const cx=t.closest("[data-cx]");if(cx){readEditor();ED.colors.splice(+cx.dataset.cx,1);if(!ED.colors.length)delete ED.colors;drawEditor();return}
+  const im=t.closest("[data-im]");
+  if(im){readEditor();const list=listOf(im.closest(".imgs").dataset.list),k=+im.dataset.k;
+    if(im.dataset.im==="x")list.splice(k,1);
+    if(im.dataset.im==="r"&&k>0)[list[k-1],list[k]]=[list[k],list[k-1]];
+    if(im.dataset.im==="l"&&k<list.length-1)[list[k+1],list[k]]=[list[k],list[k+1]];
+    drawEditor();}
+});
+$("#ed").addEventListener("change",async e=>{
+  const inp=e.target.closest("[data-up]");if(!inp||!inp.files.length)return;
+  readEditor();
+  const key=inp.dataset.up,files=[...inp.files];
+  uploading+=files.length;$("#upMsg").textContent="برفع "+ar(files.length)+" صور…";
+  for(const f of files){
+    try{const url=await upload(f);if(ED)listOf(key).push(url)}
+    catch(err){toast("ما زبط رفع «"+f.name+"»: "+err.message,4000)}
+    finally{uploading--}
+  }
+  if(ED){drawEditor();$("#upMsg").textContent=""}
+});
+async function shrink(file){
+  try{
+    const bmp=await createImageBitmap(file);const max=1400,k=Math.min(1,max/Math.max(bmp.width,bmp.height));
+    const c=document.createElement("canvas");c.width=Math.round(bmp.width*k);c.height=Math.round(bmp.height*k);
+    c.getContext("2d").drawImage(bmp,0,0,c.width,c.height);
+    return await new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej(new Error("canvas")),"image/jpeg",.85));
+  }catch{ if(/^image\/(jpeg|png|webp)$/.test(file.type))return file; throw new Error("نوع الصورة مش مدعوم، جرّب JPG أو PNG") }
+}
+async function upload(file){
+  const blob=await shrink(file);
+  const d=await api("/api/admin/upload",{method:"POST",headers:{"content-type":blob.type||"image/jpeg"},body:blob});
+  return d.url;
+}
+function editorDone(){
+  readEditor();const p=ED;const err=m=>{$("#edErr").textContent=m};
+  if(uploading)return err("استنّى، لسا في صور عم بترفع.");
+  if(!p.name)return err("اكتب اسم المنتج.");
+  if(!p.imgs.length&&!(p.colors&&p.colors[0]&&p.colors[0].imgs.length))return err("ضيف صورة وحدة على الأقل.");
+  if(p._mode==="one"){delete p.variants}else{
+    p.variants=(p.variants||[]).filter(v=>v.label);if(!p.variants.length)return err("ضيف مقاس واحد على الأقل، أو اختار «سعر واحد».");delete p.price}
+  if(p.colors){p.colors=p.colors.filter(c=>c.label&&c.imgs.length);if(!p.colors.length)delete p.colors}
+  if(!p.imgs.length&&p.colors)p.imgs=[p.colors[0].imgs[0]];
+  delete p._mode;
+  if(!p.id)p.id=newId(p.name);
+  if(edIndex<0)DATA.products.unshift(p);else DATA.products[edIndex]=p;
+  closeEditor();renderCats();renderList();markDirty();
+  toast("تمام. لا تنسى «حفظ ونشر» فوق.");
+}
+function newId(name){
+  const base=("x"+Date.now().toString(36).slice(-5));
+  let id=base,k=2;const ids=new Set(DATA.products.map(p=>p.id));while(ids.has(id))id=base+"-"+k++;return id;
+}
+$("#edDone").addEventListener("click",editorDone);
+$("#edCancel").addEventListener("click",closeEditor);
+$("#edClose").addEventListener("click",closeEditor);
+$("#new").addEventListener("click",()=>openEditor(-1));
+addEventListener("keydown",e=>{if(e.key==="Escape"&&ED)closeEditor()});
+
+/* ---------- settings ---------- */
+const toLocal=iso=>{if(!iso)return"";const d=new Date(iso);if(isNaN(d))return"";const p=new Date(d.getTime()+2*3600e3);return p.toISOString().slice(0,16)};
+const fromLocal=v=>v?v+":00+02:00":"";
+function endLabel(iso){const d=new Date(iso);if(isNaN(d))return"";return new Intl.DateTimeFormat("ar-EG",{weekday:"long",day:"numeric",month:"numeric",timeZone:"Asia/Hebron"}).format(d)}
+function renderSettings(){
+  const s=DATA.settings;$("#showPrices").checked=!!s.showPrices;
+  $("#saleOn").checked=!!s.sale.on;$("#salePct").value=s.sale.pct||30;$("#saleStart").value=toLocal(s.sale.start);$("#saleEnd").value=toLocal(s.sale.end);
+}
+$("#tab-settings").addEventListener("input",()=>{
+  const s=DATA.settings;s.showPrices=$("#showPrices").checked;
+  s.sale.on=$("#saleOn").checked;s.sale.pct=+$("#salePct").value||0;s.sale.start=fromLocal($("#saleStart").value);s.sale.end=fromLocal($("#saleEnd").value);s.sale.endLabel=endLabel(s.sale.end);
+  markDirty();
+});
+
+/* ---------- history ---------- */
+async function loadHistory(){
+  try{
+    const d=await api("/api/admin/history");
+    $("#hist").innerHTML=d.items.length?d.items.map(h=>`<div class="hrow"><div><b>${new Intl.DateTimeFormat("ar-EG",{dateStyle:"medium",timeStyle:"short",timeZone:"Asia/Hebron"}).format(new Date(h.at))}</b><br><span>${esc(h.who||"")}</span></div><button class="btn sm" type="button" data-h="${h.id}">رجّع هاي النسخة</button></div>`).join(""):`<div class="empty">لسا ما في نسخ. أول حفظ بيعمل نسخة.</div>`;
+  }catch(e){$("#hist").innerHTML=`<div class="empty">${esc(e.message)}</div>`}
+}
+$("#hist").addEventListener("click",async e=>{
+  const b=e.target.closest("[data-h]");if(!b)return;
+  if(b.dataset.sure!=="1"){b.dataset.sure="1";b.textContent="متأكد؟ بيرجع الموقع لهاي النسخة";setTimeout(()=>{if(b.isConnected){b.dataset.sure="";b.textContent="رجّع هاي النسخة"}},4000);return}
+  b.disabled=true;
+  try{await api("/api/admin/history",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({id:+b.dataset.h})});toast("رجعت النسخة، والموقع تحدّث.");await load();loadHistory()}
+  catch(err){toast(err.message,4000);b.disabled=false}
+});
+
+/* ---------- tabs, save, discard ---------- */
+document.querySelector(".tabs").addEventListener("click",e=>{
+  const t=e.target.closest(".tab");if(!t)return;
+  document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",x===t));
+  ["products","settings","history"].forEach(k=>$("#tab-"+k).hidden=k!==t.dataset.tab);
+  if(t.dataset.tab==="history")loadHistory();
+});
+$("#save").addEventListener("click",async()=>{
+  const b=$("#save");b.disabled=true;b.textContent="بحفظ…";
+  try{
+    const d=await api("/api/admin/catalog",{method:"PUT",headers:{"content-type":"application/json"},body:JSON.stringify({...DATA,baseSavedAt:base})});
+    base=d.savedAt;saved=JSON.stringify(DATA);toast("انحفظ ✓ الموقع تحدّث (خلال دقيقة على الأكثر).");
+  }catch(e){toast(e.message,5000)}
+  finally{b.textContent="حفظ ونشر";markDirty()}
+});
+$("#discard").addEventListener("click",()=>{DATA=JSON.parse(saved);renderAll();toast("رجعت لآخر نسخة محفوظة.")});
+
+load();
+</script>
+</body>
+</html>

@@ -1,0 +1,535 @@
+{
+ "cats": [
+  {
+   "id": "kitchen",
+   "c": "accent",
+   "img": "hero-kitchen.jpg",
+   "name": "إكسسوارات المطابخ",
+   "desc": "سلال المونة، حلول الزوايا، سلال الزبالة المخفية، ومنظمات الجوارير",
+   "icon": "<path d=\"M4 10h16v10H4z\"/><path d=\"M4 10l2-5h12l2 5\"/><path d=\"M10 14h4\"/>"
+  },
+  {
+   "id": "closet",
+   "c": "lilac",
+   "img": "hero-bedroom.jpg",
+   "name": "إكسسوارات غرف النوم",
+   "desc": "علاقات سحب، رفوف أحذية، جرارات إكسسوارات، وطاولة كوي مخفية",
+   "icon": "<path d=\"M6 3h12v18H6z\"/><path d=\"M12 3v18\"/><path d=\"M10 11v2M14 11v2\"/>"
+  },
+  {
+   "id": "stone",
+   "c": "amber",
+   "img": "p-stone1-1.jpg",
+   "name": "بديل حجر",
+   "desc": "ألواح بديل حجر للجدران والديكور الداخلي والخارجي",
+   "icon": "<path d=\"M3 5h8v5H3zM13 5h8v5h-8zM3 14h5v5H3zM10 14h11v5H10z\"/>"
+  }
+ ],
+ "products": [
+  {
+   "id": "pants",
+   "name": "علاقة بناطيل هايدروليك",
+   "cat": "closet",
+   "price": 150,
+   "specs": [
+    "سحب",
+    "٢٠ بنطلون",
+    "٦٥ × ٤٦ سم"
+   ],
+   "imgs": [
+    "p-pants-1.jpg",
+    "p-pants-2.jpg"
+   ]
+  },
+  {
+   "id": "iron",
+   "name": "طاولة كوي سحب مخفية داخل الخزانة",
+   "cat": "closet",
+   "price": 200,
+   "specs": [
+    "بتنطوي وبتختفي",
+    "مطوية ٤٥ × ٣٠ سم",
+    "مفتوحة ٨٠ سم"
+   ],
+   "imgs": [
+    "p-iron-1.jpg",
+    "p-iron-2.jpg",
+    "p-iron-3.jpg"
+   ]
+  },
+  {
+   "id": "jewel",
+   "name": "منظم إكسسوار فاخر شامواه وجلد",
+   "cat": "closet",
+   "price": 250,
+   "specs": [
+    "عرض قابل للتمديد ٥٠–٨٠ سم",
+    "عمق ٤٠ سم",
+    "للساعات والخواتم والأساور"
+   ],
+   "imgs": [
+    "p-jewel-1.jpg",
+    "p-jewel-2.jpg",
+    "p-jewel-3.jpg",
+    "p-jewel-4.jpg"
+   ]
+  },
+  {
+   "id": "graph",
+   "name": "جرار إكسسوار لون جرافيت",
+   "cat": "closet",
+   "price": 250,
+   "specs": [
+    "مع سكك سحب",
+    "٥٦ × ٤٥ سم",
+    "٩ خانات منها علبة بغطا وخانة خواتم"
+   ],
+   "imgs": [
+    "p-graph-1.jpg",
+    "p-graph-2.jpg",
+    "p-graph-3.jpg"
+   ]
+  },
+  {
+   "id": "safe",
+   "name": "خزنة فاخرة بالبصمة والرقم السري",
+   "cat": "closet",
+   "price": 480,
+   "specs": [
+    "بصمة + رقم سري + مفتاح",
+    "٥٦ × ٤٠ سم",
+    "تبطين مخمل أحمر"
+   ],
+   "imgs": [
+    "p-safe-1.jpg",
+    "p-safe-2.jpg",
+    "p-safe-3.jpg"
+   ]
+  },
+  {
+   "id": "lift",
+   "name": "علاقة ملابس سحب هايدروليك",
+   "cat": "closet",
+   "specs": [
+    "بتنزل لعندك وبترجع لحالها",
+    "ارتفاع ٨٣ سم"
+   ],
+   "imgs": [
+    "p-lift-1.jpg",
+    "p-lift-life.jpg",
+    "p-lift-2.jpg",
+    "p-lift-3.jpg"
+   ],
+   "variants": [
+    {
+     "label": "عرض ٦٣ سم",
+     "price": 110,
+     "img": "p-lift-2.jpg"
+    },
+    {
+     "label": "عرض ١١٥ سم",
+     "price": 120,
+     "img": "p-lift-3.jpg"
+    }
+   ]
+  },
+  {
+   "id": "tie",
+   "name": "علاقة جرافة هايدروليك",
+   "cat": "closet",
+   "specs": [
+    "سحب",
+    "طول ٤٧ سم",
+    "عرض ١٦ سم"
+   ],
+   "imgs": [
+    "p-tie-1.jpg",
+    "p-tie-2.jpg",
+    "p-tie-3.jpg"
+   ],
+   "variants": [
+    {
+     "label": "تركيب يمين",
+     "price": 120
+    },
+    {
+     "label": "تركيب شمال",
+     "price": 120
+    }
+   ]
+  },
+  {
+   "id": "laundry",
+   "name": "سلة ملابس سحب هايدروليك",
+   "cat": "closet",
+   "specs": [
+    "سحب",
+    "سلتين قماش بتنشالوا",
+    "عمق ٤٥ سم"
+   ],
+   "imgs": [
+    "p-laundry-1.jpg",
+    "p-laundry-2.jpg",
+    "p-laundry-3.jpg"
+   ],
+   "variants": [
+    {
+     "label": "عرض ٧٠ سم",
+     "price": 250,
+     "img": "p-laundry-2.jpg"
+    },
+    {
+     "label": "عرض ٨٠ سم",
+     "price": 250,
+     "img": "p-laundry-3.jpg"
+    }
+   ]
+  },
+  {
+   "id": "bin-g1",
+   "name": "سطل مهملات سحب",
+   "cat": "kitchen",
+   "specs": [
+    "سطلين",
+    "٣٥ × ٥٠ سم",
+    "ارتفاع ٤٤ سم"
+   ],
+   "imgs": [
+    "p-bin-g1.jpg"
+   ],
+   "variants": [
+    {
+     "label": "جرافيت",
+     "price": 200,
+     "imgs": [
+      "p-bin-g1.jpg",
+      "p-bin-g2.jpg",
+      "p-bin-g3.jpg"
+     ]
+    },
+    {
+     "label": "أبيض",
+     "price": 200,
+     "imgs": [
+      "p-bin-w1.jpg",
+      "p-bin-w2.jpg",
+      "p-bin-w3.jpg"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gas",
+   "name": "قاعدة غاز سحب هايدروليك",
+   "cat": "kitchen",
+   "price": 100,
+   "specs": [
+    "سحب",
+    "٣٥ × ٤٥ سم",
+    "حلقة تثبيت للجرة"
+   ],
+   "imgs": [
+    "p-gas-1.jpg",
+    "p-gas-2.jpg",
+    "p-gas-3.jpg"
+   ]
+  },
+  {
+   "id": "corner",
+   "name": "سوبر مجك كورنر زجاج",
+   "cat": "kitchen",
+   "price": 500,
+   "specs": [
+    "٤ رفوف زجاج",
+    "للزوايا",
+    "٧٠ × ٤٥ سم"
+   ],
+   "imgs": [
+    "p-corner-1.jpg",
+    "p-corner-2.jpg",
+    "p-corner-3.jpg"
+   ]
+  },
+  {
+   "id": "cornerss",
+   "name": "سوبر مجك كورنر ستانلس",
+   "cat": "kitchen",
+   "price": 350,
+   "specs": [
+    "٤ سلال ستانلس",
+    "للزوايا",
+    "٧٠ × ٤٥ سم"
+   ],
+   "imgs": [
+    "p-cornerss-1.jpg",
+    "p-cornerss-2.jpg",
+    "p-cornerss-3.jpg"
+   ]
+  },
+  {
+   "id": "basket",
+   "name": "سلة ستانلس هايدروليك",
+   "cat": "kitchen",
+   "specs": [
+    "سحب",
+    "العمق ثابت لكل المقاسات"
+   ],
+   "imgs": [
+    "p-basket-1.jpg",
+    "p-basket-2.jpg",
+    "p-basket-3.jpg"
+   ],
+   "variants": [
+    {
+     "label": "عرض ٣٠ سم",
+     "price": 65
+    },
+    {
+     "label": "عرض ٣٥ سم",
+     "price": 70
+    },
+    {
+     "label": "عرض ٤٠ سم",
+     "price": 75
+    },
+    {
+     "label": "عرض ٤٥ سم",
+     "price": 80
+    },
+    {
+     "label": "عرض ٥٠ سم",
+     "price": 85
+    },
+    {
+     "label": "عرض ٥٥ سم",
+     "price": 90
+    },
+    {
+     "label": "عرض ٦٠ سم",
+     "price": 95
+    }
+   ]
+  },
+  {
+   "id": "tray-g1",
+   "name": "منظم جرار الشوك والمعالق",
+   "cat": "kitchen",
+   "specs": [
+    "١٠ خانات",
+    "عمق ٤٨ سم"
+   ],
+   "imgs": [
+    "p-tray-g1.jpg"
+   ],
+   "variants": [
+    {
+     "label": "عرض ٦٣ سم",
+     "price": 35
+    },
+    {
+     "label": "عرض ٧٣ سم",
+     "price": 40
+    },
+    {
+     "label": "عرض ٨٣ سم",
+     "price": 45
+    }
+   ],
+   "colors": [
+    {
+     "label": "سكني",
+     "imgs": [
+      "p-tray-g1.jpg",
+      "p-tray-life.jpg",
+      "p-tray-dim.jpg"
+     ]
+    },
+    {
+     "label": "أبيض",
+     "imgs": [
+      "p-tray-w1.jpg",
+      "p-tray-dim.jpg"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "spicess",
+   "name": "سلة بهار وقناني سحب",
+   "cat": "kitchen",
+   "specs": [
+    "رفين",
+    "عمق ٤٨ سم",
+    "ارتفاع ٥٢ سم"
+   ],
+   "imgs": [
+    "p-spicess-1.jpg",
+    "p-spicess-2.jpg",
+    "p-spicess-3.jpg"
+   ],
+   "variants": [
+    {
+     "label": "عرض ١٥ سم",
+     "price": 125
+    },
+    {
+     "label": "عرض ٢٠ سم",
+     "price": 135
+    },
+    {
+     "label": "عرض ٢٥ سم",
+     "price": 145
+    },
+    {
+     "label": "عرض ٣٠ سم",
+     "price": 155
+    },
+    {
+     "label": "عرض ٣٥ سم",
+     "price": 165
+    },
+    {
+     "label": "عرض ٤٠ سم",
+     "price": 175
+    }
+   ]
+  },
+  {
+   "id": "pantry",
+   "name": "سلة مونة فاخر زجاج هايدروليك",
+   "cat": "kitchen",
+   "specs": [
+    "رفوف بحماية زجاج",
+    "فواصل متحركة",
+    "عمق ٤٥ سم",
+    "ارتفاع ٤٥ سم"
+   ],
+   "imgs": [
+    "p-pantry-1.jpg",
+    "p-pantry-2.jpg",
+    "p-pantry-3.jpg"
+   ],
+   "variants": [
+    {
+     "label": "عرض ١٥ سم",
+     "price": 150
+    },
+    {
+     "label": "عرض ٢٠ سم",
+     "price": 160
+    },
+    {
+     "label": "عرض ٢٥ سم",
+     "price": 170
+    },
+    {
+     "label": "عرض ٣٠ سم",
+     "price": 180
+    },
+    {
+     "label": "عرض ٣٥ سم",
+     "price": 190
+    },
+    {
+     "label": "عرض ٤٠ سم",
+     "price": 200
+    }
+   ]
+  },
+  {
+   "id": "stone1",
+   "name": "لوح بديل حجر",
+   "cat": "stone",
+   "price": 60,
+   "specs": [
+    "٦٠ × ١٥٠ سم",
+    "مرن وبينحني",
+    "للجدران والديكور"
+   ],
+   "imgs": [
+    "p-stone1-1.jpg",
+    "p-stone1-2.jpg",
+    "p-stone1-3.jpg",
+    "p-stone1-4.jpg"
+   ]
+  },
+  {
+   "id": "stone2",
+   "name": "لوح بديل حجر رمادي",
+   "cat": "stone",
+   "price": 60,
+   "specs": [
+    "٦٠ × ١٢٠ سم",
+    "مرن وبينحني",
+    "للجدران والديكور"
+   ],
+   "imgs": [
+    "p-stone2-1.jpg",
+    "p-stone2-2.jpg",
+    "p-stone2-3.jpg",
+    "p-stone2-4.jpg"
+   ]
+  },
+  {
+   "id": "stone3",
+   "name": "لوح بديل حجر أبيض",
+   "cat": "stone",
+   "price": 60,
+   "specs": [
+    "٦٠ × ١٢٠ سم",
+    "مرن وبينحني",
+    "للجدران والديكور"
+   ],
+   "imgs": [
+    "p-stone3-1.jpg",
+    "p-stone3-2.jpg",
+    "p-stone3-3.jpg",
+    "p-stone3-4.jpg"
+   ]
+  },
+  {
+   "id": "stone4",
+   "name": "لوح بديل حجر ترافرتين بيج",
+   "cat": "stone",
+   "price": 60,
+   "specs": [
+    "٦٠ × ١٢٠ سم",
+    "مرن وبينحني",
+    "للجدران والديكور"
+   ],
+   "imgs": [
+    "p-stone4-1.jpg",
+    "p-stone4-2.jpg",
+    "p-stone4-3.jpg",
+    "p-stone4-4.jpg"
+   ]
+  },
+  {
+   "id": "stone5",
+   "name": "لوح بديل حجر ترافرتين",
+   "cat": "stone",
+   "price": 60,
+   "specs": [
+    "٦٠ × ١٢٠ سم",
+    "مرن وبينحني",
+    "للجدران والديكور"
+   ],
+   "imgs": [
+    "p-stone5-1.jpg",
+    "p-stone5-2.jpg",
+    "p-stone5-3.jpg",
+    "p-stone5-4.jpg"
+   ]
+  }
+ ],
+ "settings": {
+  "showPrices": false,
+  "sale": {
+   "on": false,
+   "pct": 30,
+   "start": "2026-11-10T22:00:00+02:00",
+   "end": "2026-11-12T23:59:59+02:00",
+   "endLabel": "الخميس ١٢/١١"
+  }
+ }
+}

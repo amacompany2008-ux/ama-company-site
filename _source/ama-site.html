@@ -435,13 +435,14 @@ footer .wrap{padding-block:24px;display:flex;justify-content:space-between;align
 </a>
 
 <script>
-const CATS=[
+/* built-in copy of the catalog: shown if the dashboard data can't be loaded */
+let CATS=[
  {id:"kitchen",c:"accent",img:"hero-kitchen.jpg",name:"إكسسوارات المطابخ",desc:"سلال المونة، حلول الزوايا، سلال الزبالة المخفية، ومنظمات الجوارير",icon:'<path d="M4 10h16v10H4z"/><path d="M4 10l2-5h12l2 5"/><path d="M10 14h4"/>'},
  {id:"closet",c:"lilac",img:"hero-bedroom.jpg",name:"إكسسوارات غرف النوم",desc:"علاقات سحب، رفوف أحذية، جرارات إكسسوارات، وطاولة كوي مخفية",icon:'<path d="M6 3h12v18H6z"/><path d="M12 3v18"/><path d="M10 11v2M14 11v2"/>'},
  {id:"stone",c:"amber",img:"p-stone1-1.jpg",name:"بديل حجر",desc:"ألواح بديل حجر للجدران والديكور الداخلي والخارجي",icon:'<path d="M3 5h8v5H3zM13 5h8v5h-8zM3 14h5v5H3zM10 14h11v5H10z"/>'}
 ];
 /* products: add one object per item; imgs are files published next to the page */
-const P=[
+let P=[
  {name:"علاقة بناطيل هايدروليك",cat:"closet",price:150,specs:["سحب","٢٠ بنطلون","٦٥ × ٤٦ سم"],imgs:["p-pants-1.jpg","p-pants-2.jpg"]},
  {name:"طاولة كوي سحب مخفية داخل الخزانة",cat:"closet",price:200,specs:["بتنطوي وبتختفي","مطوية ٤٥ × ٣٠ سم","مفتوحة ٨٠ سم"],imgs:["p-iron-1.jpg","p-iron-2.jpg","p-iron-3.jpg"]},
  {name:"منظم إكسسوار فاخر شامواه وجلد",cat:"closet",price:250,specs:["عرض قابل للتمديد ٥٠–٨٠ سم","عمق ٤٠ سم","للساعات والخواتم والأساور"],imgs:["p-jewel-1.jpg","p-jewel-2.jpg","p-jewel-3.jpg","p-jewel-4.jpg"]},
@@ -476,11 +477,11 @@ const P=[
 const WA="https://wa.me/972567904444?text=";
 /* live site address: product links in WhatsApp messages point here (change when the domain is connected) */
 const SITE="https://ama-company-ps.pages.dev";
-const slug=p=>p.imgs[0].replace(/^p-/,"").replace(/(-\d+)?\.jpg$/,"");
+const slug=p=>p.id||p.imgs[0].replace(/^p-/,"").replace(/(-\d+)?\.jpg$/,"");
 /* prices stay in the product list; set to true to show them again */
-const SHOW_PRICES=false;
+let SHOW_PRICES=false;
 /* sale: on between start and end (Palestine time); set on:false to stop it early */
-const SALE={on:false,pct:30,start:"2026-11-10T22:00:00+02:00",end:"2026-11-12T23:59:59+02:00",endLabel:"الخميس ١٢/١١"};
+let SALE={on:false,pct:30,start:"2026-11-10T22:00:00+02:00",end:"2026-11-12T23:59:59+02:00",endLabel:"الخميس ١٢/١١"};
 const saleNow=()=>{const t=Date.now();return SALE.on&&t>=Date.parse(SALE.start)&&t<=Date.parse(SALE.end)};
 const priceHtml=a=>{
   if(typeof a!=="number")return a;
@@ -490,6 +491,23 @@ const priceHtml=a=>{
 };
 let active="all";
 const $=s=>document.querySelector(s);
+/* load the catalog saved from the dashboard (if any), then build the page */
+(function(){
+  const ctl=typeof AbortController!=="undefined"?new AbortController():null;
+  const t=setTimeout(()=>ctl&&ctl.abort(),3500);
+  fetch("/api/catalog",{cache:"no-store",signal:ctl?ctl.signal:undefined})
+    .then(r=>r.ok?r.json():null)
+    .then(d=>{
+      if(!d||!Array.isArray(d.products)||!d.products.length)return;
+      if(Array.isArray(d.cats)&&d.cats.length)CATS=d.cats;
+      P=d.products;
+      if(d.settings){SHOW_PRICES=!!d.settings.showPrices;if(d.settings.sale)SALE=d.settings.sale}
+    })
+    .catch(()=>{})
+    .finally(()=>{clearTimeout(t);boot()});
+})();
+
+function boot(){
 
 $("#catGrid").innerHTML=CATS.map(c=>{
   const n=P.filter(p=>p.cat===c.id).length;
@@ -704,5 +722,6 @@ $("#copy").addEventListener("click",()=>{
     $("#copied").textContent="الرقم محدد، انسخه من جهازك";
   });
 });
+}
 
 </script>
