@@ -96,9 +96,9 @@ body.sheet-open{overflow:hidden}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .seg button{border:0;background:#fff;padding:7px 14px;cursor:pointer;font-weight:700}
 .seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
-.vrow{display:grid;grid-template-columns:1fr 96px 84px 36px;gap:6px;align-items:center}
+.vrow{display:grid;grid-template-columns:1fr 90px 118px 36px;gap:6px;align-items:center}
 .vhead{font-size:12px;font-weight:700;color:var(--muted)}
-@media (max-width:480px){.vrow{grid-template-columns:1fr 70px 58px 32px;gap:4px}.vrow input{padding:7px 6px}}
+@media (max-width:480px){.vrow{grid-template-columns:1fr 62px 96px 30px;gap:4px}.stk{font-size:11.5px}.vrow input{padding:7px 6px}}
 .stk{border:1px solid #a9dbbd;background:#e8f6ee;color:var(--ok);border-radius:8px;padding:7px 4px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap}
 .stk[aria-pressed="true"]{border-color:#f3b9b3;background:#fdeceb;color:var(--bad)}
 .seg.stock button[data-stock="in"][aria-pressed="true"]{background:var(--ok)}
@@ -270,11 +270,11 @@ function priceText(p){
 function stock(p){
   if(p.variants){
     const n=p.variants.filter(v=>v.qty===0).length;
-    if(n&&n===p.variants.length)return{badge:'<span class="badge out">مخلص</span>',text:""};
-    if(n)return{badge:'<span class="badge low">'+(n===1?"مقاس مخلص":ar(n)+" مقاسات مخلصة")+'</span>',text:""};
+    if(n&&n===p.variants.length)return{badge:'<span class="badge out">نفذت الكمية</span>',text:""};
+    if(n)return{badge:'<span class="badge low">'+(n===1?"مقاس نفذت كميته":ar(n)+" مقاسات نفذت كميتها")+'</span>',text:""};
     return{badge:"",text:""};
   }
-  if(p.qty===0)return{badge:'<span class="badge out">مخلص</span>',text:""};
+  if(p.qty===0)return{badge:'<span class="badge out">نفذت الكمية</span>',text:""};
   return{badge:"",text:""};
 }
 function renderCats(){
@@ -349,11 +349,11 @@ function drawEditor(){
     <h3>السعر</h3>
     <div class="seg" role="group" aria-label="نوع السعر"><button type="button" data-mode="one" aria-pressed="${p._mode==="one"}">سعر واحد</button><button type="button" data-mode="var" aria-pressed="${p._mode==="var"}">حسب المقاس أو النوع</button></div>
     ${p._mode==="one"?`<div class="grid2"><label class="f">السعر بالشيكل<input type="text" inputmode="decimal" id="e-price" min="0"  value="${p.price??""}"></label>
-      <div class="f"><span>بالمخزن</span><div class="seg stock" role="group" aria-label="التوفر"><button type="button" data-stock="in" aria-pressed="${p.qty!==0}">✓ متوفر</button><button type="button" data-stock="out" aria-pressed="${p.qty===0}">✕ مخلص</button></div></div></div>
-      <p class="hint" style="margin:0">إذا اخترت «مخلص» بيطلع للزبون «نفذت الكمية» وزر «اسأل متى بيتوفر».</p>`:`
+      <div class="f"><span>بالمخزن</span><div class="seg stock" role="group" aria-label="التوفر"><button type="button" data-stock="in" aria-pressed="${p.qty!==0}">✓ متوفر</button><button type="button" data-stock="out" aria-pressed="${p.qty===0}">✕ نفذت الكمية</button></div></div></div>
+      <p class="hint" style="margin:0">إذا اخترت «نفذت الكمية» بتطلع للزبون نفس الكلمة على المنتج، وزرّه بيصير «اسأل متى بيتوفر».</p>`:`
       <div class="vrow vhead" aria-hidden="true"><span>المقاس / النوع</span><span>السعر</span><span>بالمخزن</span><span></span></div>
-      <div id="vars" style="display:grid;gap:6px">${(p.variants||[]).map((v,k)=>`<div class="vrow${v.qty===0?" is-out":""}" data-k="${k}"><input data-v="label" value="${esc(v.label)}" placeholder="مثلاً: عرض ٣٠ سم" aria-label="المقاس"><input data-v="price" type="text" inputmode="decimal" min="0"  value="${v.price??""}" placeholder="السعر" aria-label="السعر"><button type="button" class="stk" data-vs="${k}" aria-pressed="${v.qty===0}" aria-label="${esc(v.label)}: ${v.qty===0?"مخلص":"متوفر"}">${v.qty===0?"✕ مخلص":"✓ متوفر"}</button><button class="icon" type="button" data-vx="${k}" aria-label="احذف">✕</button></div>`).join("")}</div>
-      <p class="hint" style="margin:0">اكبس «متوفر» عشان تحوّله لـ«مخلص» والعكس. المقاس المخلص بيطلع للزبون «نفذت الكمية».</p>
+      <div id="vars" style="display:grid;gap:6px">${(p.variants||[]).map((v,k)=>`<div class="vrow${v.qty===0?" is-out":""}" data-k="${k}"><input data-v="label" value="${esc(v.label)}" placeholder="مثلاً: عرض ٣٠ سم" aria-label="المقاس"><input data-v="price" type="text" inputmode="decimal" min="0"  value="${v.price??""}" placeholder="السعر" aria-label="السعر"><button type="button" class="stk" data-vs="${k}" aria-pressed="${v.qty===0}" aria-label="${esc(v.label)}: ${v.qty===0?"نفذت الكمية":"متوفر"}">${v.qty===0?"✕ نفذت الكمية":"✓ متوفر"}</button><button class="icon" type="button" data-vx="${k}" aria-label="احذف">✕</button></div>`).join("")}</div>
+      <p class="hint" style="margin:0">اكبس «متوفر» عشان تحوّله لـ«نفذت الكمية» والعكس. الزبون بيشوف نفس الكلمة جنب المقاس.</p>
       <div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm" type="button" id="addVar">＋ مقاس</button><button class="btn sm ghost" type="button" id="stepVar">＋ مقاسات متتالية…</button></div>
       <div id="stepBox" hidden class="grid2" style="border:1px dashed var(--line);border-radius:10px;padding:10px">
         <label class="f">أول عرض (سم)<input type="text" inputmode="decimal" id="s-from" value="30"></label>
