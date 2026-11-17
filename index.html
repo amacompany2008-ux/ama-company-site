@@ -179,6 +179,10 @@ section{padding-block:56px}
 .price .off{display:inline-block;vertical-align:middle;margin-inline-start:6px;font-size:12px;font-weight:800;color:#fff;-webkit-text-fill-color:#fff;background:#d6322b;border-radius:999px;padding:2px 8px}
 .sale-bar{background:#d6322b;color:#fff;text-align:center;font-size:15px}
 .sale-bar .wrap{padding-block:9px}
+.soldout{position:absolute;top:10px;left:10px;font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px;background:#31424b;color:#fff}
+.card-p.is-out .ph>img{opacity:.55}
+.vars button.out,.vars button.out[aria-pressed="true"]{text-decoration:line-through;opacity:.6}
+.ask.ask-out{background:transparent;color:var(--wa);box-shadow:inset 0 0 0 1.5px var(--wa)}
 .ask{flex:none;text-align:center;font-size:14px;font-weight:700;color:#fff;background:var(--wa);text-decoration:none;padding:8px 14px;border-radius:999px}
 .ask:hover{filter:brightness(1.1)}
 .list .card-p .ph,.list .card-p h3{cursor:pointer}
@@ -538,17 +542,22 @@ function render(){
 }
 function card(p,full){
   const c=CATS.find(x=>x.id===p.cat);
-  const v0=p.variants?p.variants[0]:null;
+  const v0=p.variants?(p.variants.find(v=>!v.out)||p.variants[0]):null;
   const c0=p.colors?p.colors[0]:null;
   const imgs=(c0&&c0.imgs)||(v0&&v0.imgs)||p.imgs;
   const thumbs=thumbsHtml(imgs);
   const amount=v0?v0.price:p.price;
   const price=!SHOW_PRICES?`<span class="ask-price">اسأل عن السعر</span>`:priceHtml(amount);
-  const vars=p.variants&&p.variants.length>2?`<label class="pick"><span class="sr">اختار المقاس</span><select class="sel">${p.variants.map((v,i)=>`<option value="${i}" data-label="${v.label}" data-price="${v.price}" data-img="${v.img||""}" data-imgs="${(v.imgs||[]).join(",")}">${v.label}</option>`).join("")}</select></label>`:p.variants?`<div class="vars" role="group" aria-label="الخيار">${p.variants.map((v,i)=>`<button type="button" aria-pressed="${i===0}" data-label="${v.label}" data-price="${v.price}" data-img="${v.img||""}" data-imgs="${(v.imgs||[]).join(",")}">${v.label}</button>`).join("")}</div>`:"";
+  const vars=p.variants&&p.variants.length>2?`<label class="pick"><span class="sr">اختار المقاس</span><select class="sel">${p.variants.map((v,i)=>`<option value="${i}"${v===v0?" selected":""} data-label="${v.label}" data-price="${v.price}" data-img="${v.img||""}" data-imgs="${(v.imgs||[]).join(",")}"${v.out?' data-out="1"':""}>${v.label}${v.out?" (نفذت الكمية)":""}</option>`).join("")}</select></label>`:p.variants?`<div class="vars" role="group" aria-label="الخيار">${p.variants.map((v,i)=>`<button type="button"${v.out?' class="out" data-out="1" title="نفذت الكمية"':""} data-v="1" aria-pressed="${v===v0}" data-label="${v.label}" data-price="${v.price}" data-img="${v.img||""}" data-imgs="${(v.imgs||[]).join(",")}">${v.label}</button>`).join("")}</div>`:"";
   const cols=p.colors?`<div class="vars" role="group" aria-label="اللون">${p.colors.map((v,i)=>`<button type="button" aria-pressed="${i===0}" data-label="${v.label}" data-imgs="${v.imgs.join(",")}">${v.label}</button>`).join("")}</div>`:"";
   const picks=[v0&&v0.label,c0&&c0.label].filter(Boolean).join(" - ");
-  const msg="مرحبا، بدي أطلب: "+p.name+(picks?" ("+picks+")":"")+"\n"+SITE+"/p/"+slug(p)+"/";
-  return `<article class="card-p" id="p-${slug(p)}" data-link="${SITE}/p/${slug(p)}/" data-name="${p.name}" style="--c:var(--${c.c})"><div class="ph"><img src="${imgs[0]}" alt="${p.name}" loading="lazy"><span class="tag">${c.name.replace("إكسسوارات ","")}</span>${thumbs}</div><div class="info"><h3>${p.name}</h3><ul class="specs">${(full?p.specs:p.specs.slice(0,2)).map(s=>`<li>${s}</li>`).join("")}</ul>${vars}${cols}<div class="buy"><span class="price">${price}</span><a class="ask" target="_blank" rel="noopener" href="${WA+encodeURIComponent(msg)}">اطلب واتساب</a></div></div></article>`;
+  const out=!!(p.out||(v0&&v0.out));
+  const msg=orderMsg(p.name,picks,SITE+"/p/"+slug(p)+"/",out);
+  return `<article class="card-p${out?" is-out":""}" id="p-${slug(p)}" data-link="${SITE}/p/${slug(p)}/" data-name="${p.name}"${p.out?' data-out="1"':""} style="--c:var(--${c.c})"><div class="ph"><img src="${imgs[0]}" alt="${p.name}" loading="lazy"><span class="tag">${c.name.replace("إكسسوارات ","")}</span>${out?'<span class="soldout">نفذت الكمية</span>':""}${thumbs}</div><div class="info"><h3>${p.name}</h3><ul class="specs">${(full?p.specs:p.specs.slice(0,2)).map(s=>`<li>${s}</li>`).join("")}</ul>${vars}${cols}<div class="buy"><span class="price">${price}</span><a class="ask${out?" ask-out":""}" target="_blank" rel="noopener" href="${WA+encodeURIComponent(msg)}">${out?"اسأل متى بيتوفر":"اطلب واتساب"}</a></div></div></article>`;
+}
+/* out of stock: the card stays, marked «نفذت الكمية», and the button asks when it will be back */
+function orderMsg(name,picks,link,out){
+  return (out?"مرحبا، بدي أسأل متى بيتوفر: ":"مرحبا، بدي أطلب: ")+name+(picks?" ("+picks+")":"")+"\n"+link;
 }
 function thumbsHtml(imgs){
   return imgs.length>1?`<div class="thumbs">${imgs.map((s,i)=>`<button type="button" data-src="${s}" aria-pressed="${i===0}" aria-label="صورة ${i+1}"><img src="${s}" alt=""></button>`).join("")}</div><button type="button" class="nav nav-next" aria-label="الصورة التالية">‹</button><button type="button" class="nav nav-prev" aria-label="الصورة السابقة">›</button>`:"";
@@ -583,7 +592,13 @@ function applyPick(card,b){
   if(SHOW_PRICES&&b.dataset.price)card.querySelector(".price").innerHTML=priceHtml(+b.dataset.price);
   const sel=card.querySelector(".sel");
   const picks=[sel&&sel.selectedOptions[0].dataset.label,...[...card.querySelectorAll('.vars button[aria-pressed="true"]')].map(x=>x.dataset.label)].filter(Boolean).join(" - ");
-  card.querySelector(".ask").href=WA+encodeURIComponent("مرحبا، بدي أطلب: "+card.dataset.name+(picks?" ("+picks+")":"")+"\n"+card.dataset.link);
+  const out=card.dataset.out==="1"||!!(sel&&sel.selectedOptions[0].dataset.out)||!!card.querySelector('.vars button[data-v][aria-pressed="true"][data-out]');
+  const ask=card.querySelector(".ask");
+  ask.href=WA+encodeURIComponent(orderMsg(card.dataset.name,picks,card.dataset.link,out));
+  ask.textContent=out?"اسأل متى بيتوفر":"اطلب واتساب";ask.classList.toggle("ask-out",out);card.classList.toggle("is-out",out);
+  const ph0=card.querySelector(".ph"),so=ph0.querySelector(".soldout");
+  if(out&&!so)ph0.querySelector(".tag").insertAdjacentHTML("afterend",'<span class="soldout">نفذت الكمية</span>');
+  if(!out&&so)so.remove();
   if(b.dataset.imgs){const set=b.dataset.imgs.split(",");const ph=card.querySelector(".ph");ph.querySelector(":scope>img").src=set[0];ph.querySelectorAll(".thumbs,.nav").forEach(x=>x.remove());ph.insertAdjacentHTML("beforeend",thumbsHtml(set));}
   else if(b.dataset.img){card.querySelector(".ph>img").src=b.dataset.img;card.querySelectorAll(".thumbs button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.src===b.dataset.img))}
 }
