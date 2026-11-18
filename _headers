@@ -1,0 +1,7 @@
+# The dashboard and the home page always come fresh, so a browser never keeps showing an old version.
+/admin/*
+  Cache-Control: no-cache, no-store, must-revalidate
+/
+  Cache-Control: no-cache
+/index.html
+  Cache-Control: no-cache
